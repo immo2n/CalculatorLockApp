@@ -47,6 +47,7 @@ public class Calculator extends AppCompatActivity {
                 binding.display.setText("0");
             }
             else {
+                history.clear();
                 binding.historyDisplay.setText("");
             }
         });
