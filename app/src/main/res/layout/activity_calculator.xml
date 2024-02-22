@@ -9,6 +9,38 @@
     android:orientation="vertical"
     tools:context=".Calculator">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <TextView
+            android:gravity="center"
+            android:text="@string/fa_privacy"
+            android:fontFamily="@font/font_awesome_regular"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:id="@+id/privacy"
+            android:layout_height="match_parent"
+            android:layout_width="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:gravity="center"
+            android:text="@string/fa_history"
+            android:fontFamily="@font/font_awesome_regular"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:id="@+id/history"
+            android:layout_height="match_parent"
+            android:layout_width="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </LinearLayout>
+
     <TextView
         android:gravity="bottom|end"
         android:textSize="32sp"

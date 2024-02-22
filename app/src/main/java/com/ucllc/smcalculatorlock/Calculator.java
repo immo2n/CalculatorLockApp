@@ -1,14 +1,16 @@
 package com.ucllc.smcalculatorlock;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.view.View;
-import android.webkit.ValueCallback;
-import android.webkit.WebView;
-
+import com.ucllc.smcalculatorlock.CalculatorPages.CalculatorHistory;
+import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Interfaces.CalculatorEvalCallback;
 import com.ucllc.smcalculatorlock.databinding.ActivityCalculatorBinding;
 
@@ -16,10 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Calculator extends AppCompatActivity {
-    ActivityCalculatorBinding binding;
-    private WebView evalClient;
+    protected ActivityCalculatorBinding binding;
+    protected WebView evalClient;
     private String expression;
     private List<String> history;
+    protected DBHandler dbHandler;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -32,8 +35,14 @@ public class Calculator extends AppCompatActivity {
         this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black));
         expression = ""; //init
         history = new ArrayList<>();
+        dbHandler = new DBHandler(this);
 
-        //Uniform display size
+        //Hooks
+        binding.history.setOnClickListener(view -> {
+            startActivity(new Intent(Calculator.this, CalculatorHistory.class));
+            overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+        });
+
         //If API Level 26 or higher
         if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             binding.display.setAutoSizeTextTypeUniformWithConfiguration(10, 100, 1, 1);
@@ -202,7 +211,9 @@ public class Calculator extends AppCompatActivity {
             if(history.size() >= 8){
                 history.remove(0);
             }
-            history.add(expression + " = " + result);
+            String historyData = expression + " = " + result;
+            dbHandler.insertHistory(historyData);
+            history.add(historyData);
             expression = result;
         }
     }

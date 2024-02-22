@@ -20,4 +20,9 @@
     <string name="dot">.</string>
     <string name="_0">0</string>
     <string name="e">e</string>
+    <string name="fa_history"></string>
+    <string name="fa_privacy"></string>
+    <string name="back">Back</string>
+    <string name="calculator_history">Calculator History</string>
+    <string name="delete">Delete</string>
 </resources>
