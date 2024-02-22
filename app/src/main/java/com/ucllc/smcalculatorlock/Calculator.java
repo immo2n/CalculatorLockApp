@@ -35,7 +35,7 @@ public class Calculator extends AppCompatActivity {
 
         //Uniform display size
         //If API Level 26 or higher
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             binding.display.setAutoSizeTextTypeUniformWithConfiguration(10, 100, 1, 1);
             binding.historyDisplay.setAutoSizeTextTypeUniformWithConfiguration(10, 40, 1, 1);
         }
@@ -55,7 +55,7 @@ public class Calculator extends AppCompatActivity {
         binding.backSpace.setOnClickListener(view -> {
             if(null != expression && expression.length() > 0){
                 expression = expression.substring(0, expression.length() - 1);
-                binding.display.setText(expression);
+                binding.display.setText(signFix(expression));
             }
         });
 
@@ -71,85 +71,85 @@ public class Calculator extends AppCompatActivity {
         binding.divide.setOnClickListener(view -> {
             if(null != expression && expression.length() > 0){
                 expression += "/";
-                binding.display.setText(expression);
+                binding.display.setText(signFix(expression));
             }
         });
 
         //Seven
         binding.num7.setOnClickListener(view -> {
             expression += "7";
-            binding.display.setText(expression);
+            binding.display.setText(signFix(expression));
         });
 
         //Eight
         binding.num8.setOnClickListener(view -> {
             expression += "8";
-            binding.display.setText(expression);
+            binding.display.setText(signFix(expression));
         });
 
         //Nine
         binding.num9.setOnClickListener(view -> {
             expression += "9";
-            binding.display.setText(expression);
+            binding.display.setText(signFix(expression));
         });
 
         //Multiply
         binding.multiply.setOnClickListener(view -> {
             if(null != expression && expression.length() > 0){
                 expression += "*";
-                binding.display.setText(expression);
+                binding.display.setText(signFix(expression));
             }
         });
 
         //Four
         binding.num4.setOnClickListener(view -> {
             expression += "4";
-            binding.display.setText(expression);
+            binding.display.setText(signFix(expression));
         });
 
         //Five
         binding.num5.setOnClickListener(view -> {
             expression += "5";
-            binding.display.setText(expression);
+            binding.display.setText(signFix(expression));
         });
 
         //Six
         binding.num6.setOnClickListener(view -> {
             expression += "6";
-            binding.display.setText(expression);
+            binding.display.setText(signFix(expression));
         });
 
         //Minus
         binding.subtract.setOnClickListener(view -> {
             if(null != expression && expression.length() > 0){
                 expression += "-";
-                binding.display.setText(expression);
+                binding.display.setText(signFix(expression));
             }
         });
 
         //One
         binding.num1.setOnClickListener(view -> {
             expression += "1";
-            binding.display.setText(expression);
+            binding.display.setText(signFix(expression));
         });
 
         //Two
         binding.num2.setOnClickListener(view -> {
             expression += "2";
-            binding.display.setText(expression);
+            binding.display.setText(signFix(expression));
         });
 
         //Three
         binding.num3.setOnClickListener(view -> {
             expression += "3";
-            binding.display.setText(expression);
+            binding.display.setText(signFix(expression));
         });
 
         //Plus
         binding.addition.setOnClickListener(view -> {
             if(null != expression && expression.length() > 0){
                 expression += "+";
-                binding.display.setText(expression);
+                binding.display.setText(signFix(expression));
             }
         });
 
@@ -157,20 +157,20 @@ public class Calculator extends AppCompatActivity {
         binding.exp.setOnClickListener(view -> {
             if(null != expression && expression.length() > 0){
                 expression += "e";
-                binding.display.setText(expression);
+                binding.display.setText(signFix(expression));
             }
         });
 
         //Zero
         binding.num0.setOnClickListener(view -> {
             expression += "0";
-            binding.display.setText(expression);
+            binding.display.setText(signFix(expression));
         });
 
         //Dot
         binding.dot.setOnClickListener(view -> {
             expression += ".";
-            binding.display.setText(expression);
+            binding.display.setText(signFix(expression));
         });
 
         //Equal
@@ -193,10 +193,10 @@ public class Calculator extends AppCompatActivity {
                 resultData.append(history.get(i)).append("\n");
             }
         }
-        binding.historyDisplay.setText(resultData.toString());
+        binding.historyDisplay.setText(signFix(resultData.toString()));
         resultData = new StringBuilder();
         resultData.append(expression).append(" = ").append(result);
-        binding.display.setText(resultData.toString());
+        binding.display.setText(signFix(resultData.toString()));
         if(!result.equals("Error")){
             if(history.size() >= 8){
                 history.remove(0);
@@ -204,5 +204,8 @@ public class Calculator extends AppCompatActivity {
             history.add(expression + " = " + result);
             expression = result;
         }
-    };
+    }
+    public String signFix(String expression){
+        return expression.replace("*", "×").replace("/", "÷");
+    }
 }
