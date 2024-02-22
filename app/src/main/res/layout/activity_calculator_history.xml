@@ -46,4 +46,23 @@
 
   </LinearLayout>
 
+  <androidx.recyclerview.widget.RecyclerView
+      android:background="@color/midnight_black_button"
+      android:layout_marginTop="60dp"
+      android:id="@+id/historyView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+
+    <TextView
+        android:visibility="gone"
+        android:background="@color/midnight_black_button"
+        android:gravity="center"
+        android:id="@+id/noHistory"
+        android:textSize="20sp"
+        android:text="@string/no_history"
+        android:textColor="@color/white"
+        android:fontFamily="@font/trebuc"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
   </androidx.constraintlayout.widget.ConstraintLayout>

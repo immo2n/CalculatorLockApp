@@ -1,9 +1,8 @@
-package com.ucllc.smcalculatorlock;
+package com.ucllc.smcalculatorlock.Pages;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.webkit.WebView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +10,11 @@ import androidx.core.content.ContextCompat;
 
 import com.ucllc.smcalculatorlock.CalculatorPages.CalculatorHistory;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
+import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Interfaces.CalculatorEvalCallback;
+import com.ucllc.smcalculatorlock.R;
+import com.ucllc.smcalculatorlock.Setup;
+import com.ucllc.smcalculatorlock.Sheets.PrivacyNotice;
 import com.ucllc.smcalculatorlock.databinding.ActivityCalculatorBinding;
 
 import java.util.ArrayList;
@@ -24,23 +27,34 @@ public class Calculator extends AppCompatActivity {
     private List<String> history;
     protected DBHandler dbHandler;
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint({"SetJavaScriptEnabled", "InflateParams"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityCalculatorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        dbHandler = new DBHandler(this);
+        //Check if done setup
+        if(dbHandler.getStateValue(StateKeys.SETUP) == null){
+            startActivity(new Intent(Calculator.this, Setup.class));
+            finish();
+            return;
+        }
         evalClient = new WebView(this);
         evalClient.getSettings().setJavaScriptEnabled(true);
-        this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black));
-        expression = ""; //init
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black));
+        expression = "";
         history = new ArrayList<>();
-        dbHandler = new DBHandler(this);
 
         //Hooks
         binding.history.setOnClickListener(view -> {
             startActivity(new Intent(Calculator.this, CalculatorHistory.class));
             overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+        });
+
+        binding.privacy.setOnClickListener(v-> {
+            PrivacyNotice notice = new PrivacyNotice();
+            notice.show(getSupportFragmentManager(), notice.getTag());
         });
 
         //If API Level 26 or higher
@@ -217,7 +231,7 @@ public class Calculator extends AppCompatActivity {
             expression = result;
         }
     }
-    public String signFix(String expression){
+    public static String signFix(String expression){
         return expression.replace("*", "×").replace("/", "÷");
     }
 }

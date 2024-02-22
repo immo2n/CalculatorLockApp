@@ -113,6 +113,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
+    //Create a method to delete all history
     public void deleteHistory(){
         try {
             SQLiteDatabase db = this.getWritableDatabase();

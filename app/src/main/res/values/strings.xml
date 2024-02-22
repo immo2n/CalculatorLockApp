@@ -25,4 +25,15 @@
     <string name="back">Back</string>
     <string name="calculator_history">Calculator History</string>
     <string name="delete">Delete</string>
+    <string name="close">Close</string>
+    <string name="no_history">No history</string>
+    <string name="privacy_notice">Thank you for choosing SM Calculator Lock. This privacy notice is intended to inform you about how we collect, use, and disclose your personal information while using our application.\n\n1. Data Collection and Processing:\n   - SM Calculator Lock is a file lock application that does not collect or process any user data, including but not limited to name, phone ID, phone number, or email ID. We are committed to maintaining your privacy and ensuring that your personal information remains secure.\n\n2. Permissions:\n   - The application requires \"All files permission\" of Android to function properly, as it attempts to manage files for the user. Additionally, it requires permissions to access Photo, Video, and Audio files to query the Media manager for locking purposes. These permissions are essential for the app\'s core functionality and are used solely for the intended purpose of managing files on your device.\n\n3. Advertising:\n   - SM Calculator Lock may display AdMob advertisements. By using the app, you agree to AdMob\'s terms and conditions regarding the use of their advertising services. Please refer to AdMob\'s privacy policy for more information on how they collect, use, and disclose your information.\n\n4. Developer Disclaimer:\n   - SM Calculator Lock is developed by external developers and published by a third party. While we strive to ensure the reliability and security of our application, we cannot guarantee that it will be error-free or that it will meet all users\' expectations. Therefore, by using SM Calculator Lock, you acknowledge that the developers and publishers are not liable for any harm, damage, or loss caused by the use of this application.\n\n5. Contact Us:\n   - If you have any questions, concerns, or feedback regarding this privacy notice or our application, please feel free to contact us from Google Play store.\n\nBy continuing to use SM Calculator Lock, you agree to the terms outlined in this privacy notice. We appreciate your trust in our application and are committed to protecting your privacy and providing you with a safe and secure user experience.</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="welcome_let_s_get_started">Welcome! Let\'s get started</string>
+    <string name="privacy_read_notice">By using the application, you will agree to the following terms and contions. Please read them carefully.</string>
+    <string name="don_t_agree">Don\'t agree</string>
+    <string name="continue_text">Continue</string>
+    <string name="setup_pin">Setup PIN</string>
+    <string name="enter_pin">Enter a 4 digit PIN to setup file lock</string>
+    <string name="pin_empty">- - - -</string>
 </resources>
