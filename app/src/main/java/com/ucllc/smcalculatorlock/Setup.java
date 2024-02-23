@@ -19,14 +19,15 @@ import android.Manifest;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Pages.Calculator;
+import com.ucllc.smcalculatorlock.Pages.PinSetup;
 import com.ucllc.smcalculatorlock.databinding.ActivitySetupBinding;
 
 public class Setup extends AppCompatActivity {
-    protected ActivitySetupBinding binding;
-    protected ActivityResultLauncher<String> requestPermissionLauncher;
-    protected int PERMISSION_CODE = 100;
-    protected boolean permissionCheck = false;
-    protected DBHandler dbHandler;
+    ActivitySetupBinding binding;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
+    private final int PERMISSION_CODE = 100;
+    private boolean permissionCheck = false;
+    private DBHandler dbHandler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,10 +100,14 @@ public class Setup extends AppCompatActivity {
             permissionCheck = true;
         });
     }
-    protected void completeSetup(){
-        Intent intent = new Intent(Setup.this, Calculator.class);
+    private void completeSetup(){
         dbHandler.setAppState(StateKeys.SETUP, StateKeys.VALUE_TRUE);
-        startActivity(intent);
+        if(dbHandler.getStateValue(StateKeys.PIN) == null){
+            startActivity(new Intent(Setup.this, PinSetup.class));
+            finish();
+            return;
+        }
+        startActivity(new Intent(Setup.this, Calculator.class));
         finish();
     }
 }

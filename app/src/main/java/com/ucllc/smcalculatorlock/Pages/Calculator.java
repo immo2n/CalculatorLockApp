@@ -21,25 +21,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Calculator extends AppCompatActivity {
-    protected ActivityCalculatorBinding binding;
-    protected WebView evalClient;
+    private ActivityCalculatorBinding binding;
+    private WebView evalClient;
     private String expression;
     private List<String> history;
-    protected DBHandler dbHandler;
+    private DBHandler dbHandler;
 
     @SuppressLint({"SetJavaScriptEnabled", "InflateParams"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityCalculatorBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
         dbHandler = new DBHandler(this);
-        //Check if done setup
+        /*SETUP CHECK STARTS*/
         if(dbHandler.getStateValue(StateKeys.SETUP) == null){
             startActivity(new Intent(Calculator.this, Setup.class));
             finish();
             return;
         }
+        if(dbHandler.getStateValue(StateKeys.PIN) == null){
+            startActivity(new Intent(Calculator.this, PinSetup.class));
+            finish();
+            return;
+        }
+        /*SETUP CHECK ENDS*/
+
+        binding = ActivityCalculatorBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         evalClient = new WebView(this);
         evalClient.getSettings().setJavaScriptEnabled(true);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black));
