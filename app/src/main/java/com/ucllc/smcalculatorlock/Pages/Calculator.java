@@ -8,8 +8,10 @@ import android.webkit.WebView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ucllc.smcalculatorlock.CalculatorPages.CalculatorHistory;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
+import com.ucllc.smcalculatorlock.Custom.Global;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Interfaces.CalculatorEvalCallback;
 import com.ucllc.smcalculatorlock.R;
@@ -26,7 +28,8 @@ public class Calculator extends AppCompatActivity {
     private String expression;
     private List<String> history;
     private DBHandler dbHandler;
-
+    private String homePin;
+    private int invalidPinCount = 0;
     @SuppressLint({"SetJavaScriptEnabled", "InflateParams"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +46,31 @@ public class Calculator extends AppCompatActivity {
             finish();
             return;
         }
+        if(dbHandler.getStateValue(StateKeys.RECOVERY_PATTERN) == null){
+            startActivity(new Intent(Calculator.this, PatternLock.class).putExtra("setup", true));
+            finish();
+            return;
+        }
         /*SETUP CHECK ENDS*/
-
         binding = ActivityCalculatorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        Global global = new Global(this, this);
         evalClient = new WebView(this);
         evalClient.getSettings().setJavaScriptEnabled(true);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black));
         expression = "";
         history = new ArrayList<>();
+
+        //Ready the PIN
+        String rawPin = dbHandler.getStateValue(StateKeys.PIN);
+        homePin = (null != rawPin)? global.decrypt(rawPin):null;
+        if(null != rawPin && null == homePin) {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+            builder.setTitle("Decryption error")
+                    .setMessage("The app is unable to decrypt the stored key! Please contact the publishers.")
+                    .setPositiveButton("I Understand", null)
+                    .show();
+        }
 
         //Hooks
         binding.history.setOnClickListener(view -> {
@@ -206,6 +225,34 @@ public class Calculator extends AppCompatActivity {
 
         //Equal
         binding.equal.setOnClickListener(view -> {
+            try {
+                int check = Integer.parseInt(expression);
+                if(check >= 0 && check <= 9999){
+                    //Could be PIN
+                    if(expression.equals(homePin)){
+                        startActivity(new Intent(Calculator.this, Home.class));
+                        overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
+                        finish();
+                        return;
+                    }
+                    else {
+                        ++invalidPinCount;
+                    }
+                    if(invalidPinCount >= 3){
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+                        builder.setTitle("Forgot PIN?")
+                                .setMessage("It seems you have forgotten your PIN. Do you want to reset the PIN?")
+                                .setPositiveButton("Yes, Reset", (dialogInterface, i) -> {
+                                    startActivity(new Intent(Calculator.this, PatternLock.class));
+                                })
+                                .setCancelable(false)
+                                .setNegativeButton("No", null)
+                                .show();
+                    }
+                }
+            } catch (Exception e){
+                //Do none
+            }
             if(null != expression && expression.length() > 0){
                 eval(expression, this::displayResult);
             }

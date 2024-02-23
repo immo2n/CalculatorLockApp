@@ -11,5 +11,5 @@ public class Config {
     private static final Pair<String, String> ENCRYPTION_KEY_PAIR = new Pair<>("JX[6AozP3jq1:^=F:Nr1m>/,t@>vU+8329", "1.0");
     /*!!!!*******************************************************************!!!!*/
     protected static final String ENCRYPTION_KEY = ENCRYPTION_KEY_PAIR.first;
-    protected static final String ENCRYPTION_VERSION = ENCRYPTION_KEY_PAIR.second;
+    public static final String ENCRYPTION_VERSION = ENCRYPTION_KEY_PAIR.second;
 }

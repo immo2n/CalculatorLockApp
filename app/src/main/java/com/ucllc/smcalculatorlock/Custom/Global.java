@@ -3,6 +3,9 @@ package com.ucllc.smcalculatorlock.Custom;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -23,22 +26,23 @@ public class Global {
     public static final String LOG_TAG = "UNICORE_DEV";
     //**********************GLOBAL STATE KEYS ENDS**********************//
 
-    protected final Context context;
-    protected final Activity activity;
+    private final Context context;
+    private final Activity activity;
+    private final DBHandler dbHandler;
 
     public Global(@Nullable Context context, @Nullable Activity activity) {
         this.context = context;
         this.activity = activity;
+        this.dbHandler = (null != context)?new DBHandler(context):null;
     }
 
-    public Context getContext() {
+    @Nullable public Context getContext() {
         return context;
     }
 
-    public Activity getActivity() {
+    @Nullable public Activity getActivity() {
         return activity;
     }
-
     public static void log(Exception e){
         if(LOG_ERRORS) Log.d(LOG_TAG, e.toString());
     }
@@ -46,7 +50,7 @@ public class Global {
         if(LOG_ERRORS) Log.e(LOG_TAG, e.toString());
     }
     private SecretKeySpec secretKey;
-    public String decrypt(String strToDecrypt) {
+    @Nullable public String decrypt(@NonNull String strToDecrypt) {
         try {
             prepareSecreteKey();
             @SuppressLint("GetInstance") Cipher cipher = Cipher.getInstance("AES");
@@ -56,7 +60,7 @@ public class Global {
             return null;
         }
     }
-    public String encrypt(String strToEncrypt) {
+    @Nullable public String encrypt(@NonNull String strToEncrypt) {
         try {
             prepareSecreteKey();
             @SuppressLint("GetInstance") Cipher cipher = Cipher.getInstance("AES");
@@ -79,5 +83,20 @@ public class Global {
         } catch (NoSuchAlgorithmException e) {
             Global.logError(e);
         }
+    }
+    public void vibrate(long durationMS) {
+        if(null == activity) return;
+        Vibrator vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                VibrationEffect vibrationEffect = VibrationEffect.createOneShot(durationMS, VibrationEffect.DEFAULT_AMPLITUDE);
+                vibrator.vibrate(vibrationEffect);
+            } else {
+                vibrator.vibrate(durationMS);
+            }
+        }
+    }
+    @Nullable public DBHandler getDBHandler(){
+        return dbHandler;
     }
 }

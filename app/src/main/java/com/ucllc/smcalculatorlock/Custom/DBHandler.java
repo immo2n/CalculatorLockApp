@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 
@@ -63,6 +64,27 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
+    public void setAppState(@NonNull List<String[]> stateList){
+        try {
+            for(String[] pair:stateList){
+                setAppState(pair[0], pair[1]);
+            }
+        }
+        catch (Exception e){
+            Global.logError(e);
+        }
+    }
+
+    public void deleteStateValue(@NonNull String stateKey){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL("DELETE FROM " + APP_STATE_TABLE_NAME + " WHERE " + APP_STATE_KEY + " = ?", new String[]{stateKey});
+        }
+        catch (Exception e){
+            Global.logError(e);
+        }
+    }
+    
     public String getStateValue(@NonNull String stateKey){
         try {
             String result = null;

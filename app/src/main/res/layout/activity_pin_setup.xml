@@ -73,6 +73,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/allClear"
                     android:fontFamily="@font/trebuc"
@@ -92,6 +94,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/backSpace"
                     android:fontFamily="@font/font_awesome_regular"
@@ -157,6 +161,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/num7"
                     android:fontFamily="@font/trebuc"
@@ -176,6 +182,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/num8"
                     android:fontFamily="@font/trebuc"
@@ -195,6 +203,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/num9"
                     android:fontFamily="@font/trebuc"
@@ -242,6 +252,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/num4"
                     android:fontFamily="@font/trebuc"
@@ -261,6 +273,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/num5"
                     android:fontFamily="@font/trebuc"
@@ -280,6 +294,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/num6"
                     android:fontFamily="@font/trebuc"
@@ -327,6 +343,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/num1"
                     android:fontFamily="@font/trebuc"
@@ -346,6 +364,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/num2"
                     android:fontFamily="@font/trebuc"
@@ -365,6 +385,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/num3"
                     android:fontFamily="@font/trebuc"
@@ -431,6 +453,8 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:background="@drawable/circular_hover"
                     android:id="@+id/num0"
                     android:fontFamily="@font/trebuc"
@@ -470,14 +494,16 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:background="@drawable/circular_hover"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:background="@drawable/circular_hover_enter"
                     android:id="@+id/equal"
                     android:fontFamily="@font/trebuc"
                     android:textStyle="bold"
                     android:textSize="40sp"
                     android:gravity="center"
                     android:text="@string/equal"
-                    android:textColor="@color/light_red"
+                    android:textColor="@color/white"
                     android:layout_width="70dp"
                     android:layout_height="70dp"/>
             </RelativeLayout>

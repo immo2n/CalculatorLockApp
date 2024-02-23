@@ -35,5 +35,10 @@
     <string name="continue_text">Continue</string>
     <string name="setup_pin">Setup PIN</string>
     <string name="enter_pin">Enter a 4 digit PIN to setup file lock</string>
-    <string name="pin_empty">- - - -</string>
+    <string name="pin_empty">----</string>
+    <string name="confirm_your_pin">Confirm your pin</string>
+    <string name="draw_your_pattern">Draw Your Pattern</string>
+    <string name="draw_your_patern_to_complete_action">Draw your patern to complete action</string>
+    <string name="setup_a_new_pattern_for_pin_recovery">Setup a new pattern for PIN recovery</string>
+    <string name="draw_again_to_confirm">Draw again to confirm</string>
 </resources>

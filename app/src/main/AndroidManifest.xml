@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SMCalculatorLock"
         tools:targetApi="31">
+        <activity
+            android:name=".Pages.PatternLock"
+            android:exported="false" />
+        <activity
+            android:name=".Pages.Home"
+            android:exported="false" />
         <activity
             android:name=".Pages.PinSetup"
             android:exported="false" />
