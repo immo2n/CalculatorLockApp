@@ -101,6 +101,7 @@ public class PatternLock extends AppCompatActivity {
                                 global.getDBHandler().deleteStateValue(StateKeys.PIN);
                                 global.getDBHandler().deleteStateValue(StateKeys.ENCRYPTION_VERSION);
                                 startActivity(new Intent(PatternLock.this, PinSetup.class));
+                                finish();
                             }
                         }
                         else {

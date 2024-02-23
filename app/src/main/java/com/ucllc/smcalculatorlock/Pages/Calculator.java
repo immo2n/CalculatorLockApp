@@ -244,6 +244,7 @@ public class Calculator extends AppCompatActivity {
                                 .setMessage("It seems you have forgotten your PIN. Do you want to reset the PIN?")
                                 .setPositiveButton("Yes, Reset", (dialogInterface, i) -> {
                                     startActivity(new Intent(Calculator.this, PatternLock.class));
+                                    finish();
                                 })
                                 .setCancelable(false)
                                 .setNegativeButton("No",(dialogInterface, i) -> {

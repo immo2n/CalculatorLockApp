@@ -41,4 +41,11 @@
     <string name="draw_your_patern_to_complete_action">Draw your pattern to complete action</string>
     <string name="setup_a_new_pattern_for_pin_recovery">Setup a new pattern for PIN recovery</string>
     <string name="draw_again_to_confirm">Draw again to confirm</string>
+    <string name="menu">Menu</string>
+    <string name="vault">Vault</string>
+    <string name="vault_pin">Vault PIN</string>
+    <string name="change">Change</string>
+    <string name="change_pin">Change PIN</string>
+    <string name="change_pattern">Change Pattern</string>
+    <string name="change_pin_message">Your vault is locked with your PIN. You can change your PIN or change the PIN recovery pattern.</string>
 </resources>
