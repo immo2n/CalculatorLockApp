@@ -227,7 +227,7 @@ public class Calculator extends AppCompatActivity {
         binding.equal.setOnClickListener(view -> {
             try {
                 int check = Integer.parseInt(expression);
-                if(check >= 0 && check <= 9999){
+                if(check >= 1000 && check <= 9999){
                     //Could be PIN
                     if(expression.equals(homePin)){
                         startActivity(new Intent(Calculator.this, Home.class));
@@ -246,7 +246,9 @@ public class Calculator extends AppCompatActivity {
                                     startActivity(new Intent(Calculator.this, PatternLock.class));
                                 })
                                 .setCancelable(false)
-                                .setNegativeButton("No", null)
+                                .setNegativeButton("No",(dialogInterface, i) -> {
+                                    invalidPinCount = 0;
+                                })
                                 .show();
                     }
                 }
