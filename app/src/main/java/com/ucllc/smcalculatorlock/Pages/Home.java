@@ -21,7 +21,7 @@ public class Home extends AppCompatActivity {
         setContentView(binding.getRoot());
         global = new Global(this, this);
         dbHandler = new DBHandler(this);
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black));
 
 
 
