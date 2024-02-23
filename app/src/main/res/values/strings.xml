@@ -48,4 +48,7 @@
     <string name="change_pin">Change PIN</string>
     <string name="change_pattern">Change Pattern</string>
     <string name="change_pin_message">Your vault is locked with your PIN. You can change your PIN or change the PIN recovery pattern.</string>
+    <string name="fa_lock"></string>
+    <string name="fa_apps"></string>
+    <string name="uf07b"></string>
 </resources>
