@@ -6,5 +6,5 @@ public class StateKeys {
     public static final String SETUP = "setup";
     public static final String PIN = "pin";
     public static final String RECOVERY_PATTERN = "pattern";
-    public static final String ENCRYPTION_VERSION = "pin";
+    public static final String ENCRYPTION_VERSION = "pin_encryption_version";
 }

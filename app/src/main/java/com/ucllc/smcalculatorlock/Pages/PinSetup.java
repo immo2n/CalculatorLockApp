@@ -69,33 +69,26 @@ public class PinSetup extends AppCompatActivity {
                     if(null != global.getDBHandler()){
                         String encryptedPin = global.encrypt(pin);
                         if(null != encryptedPin) {
-
                             //STORE PIN
                             List<String[]> stateList = new ArrayList<>();
                             stateList.add(new String[]{StateKeys.PIN, encryptedPin});
                             stateList.add(new String[]{StateKeys.ENCRYPTION_VERSION, Config.ENCRYPTION_VERSION});
                             global.getDBHandler().setAppState(stateList);
-
-                            if(null == global.getDBHandler().getStateValue(StateKeys.RECOVERY_PATTERN)){
-                                startActivity(new Intent(PinSetup.this, PatternLock.class).putExtra("setup", true));
-                                finish();
-                                return;
-                            }
-
-                            startActivity(new Intent(PinSetup.this, Calculator.class));
+                            //SETUP RECOVERY PATTERN
+                            startActivity(new Intent(PinSetup.this, PatternLock.class).putExtra("setup", true));
                             finish();
                         }
                         else {
-                            Toast.makeText(PinSetup.this, "Encryption error!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PinSetup.this, "Encryption error", Toast.LENGTH_SHORT).show();
                         }
                     }
                     else {
-                        Toast.makeText(PinSetup.this, "Database error!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PinSetup.this, "Database error", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
                     global.vibrate(150);
-                    Toast.makeText(PinSetup.this, "Wrong PIN!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PinSetup.this, "Wrong PIN", Toast.LENGTH_SHORT).show();
                     binding.pinMessage.setText(R.string.enter_pin);
                     pin = "";
                     holderPin = null;

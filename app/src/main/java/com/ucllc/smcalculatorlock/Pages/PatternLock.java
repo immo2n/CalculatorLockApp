@@ -75,12 +75,14 @@ public class PatternLock extends AppCompatActivity {
                             }
                             else {
                                 Toast.makeText(PatternLock.this, "Failed to save the pattern! Restart app.", Toast.LENGTH_SHORT).show();
+                                global.vibrate(100);
                             }
                         }
                         else {
                             Toast.makeText(PatternLock.this, "Patterns do not match", Toast.LENGTH_SHORT).show();
                             holdPattern = null;
                             binding.message.setText(R.string.setup_a_new_pattern_for_pin_recovery);
+                            global.vibrate(100);
                         }
                     }
                     return true;
@@ -89,14 +91,21 @@ public class PatternLock extends AppCompatActivity {
                     //Recovery PIN mode -- ONLY CHECK THE PATTERN
                     if(null == oldPattern){
                         Toast.makeText(PatternLock.this, "No pattern found! Or, can not decrypt.", Toast.LENGTH_SHORT).show();
+                        global.vibrate(100);
                         return false;
                     }
                     else {
                         if(oldPattern.equals(arrayList.toString())){
-                            Toast.makeText(PatternLock.this, "Done yo!", Toast.LENGTH_SHORT).show();
+                            if(null != global.getDBHandler()){
+                                global.getDBHandler().deleteStateValue(StateKeys.RECOVERY_PATTERN);
+                                global.getDBHandler().deleteStateValue(StateKeys.PIN);
+                                global.getDBHandler().deleteStateValue(StateKeys.ENCRYPTION_VERSION);
+                                startActivity(new Intent(PatternLock.this, PinSetup.class));
+                            }
                         }
                         else {
                             Toast.makeText(PatternLock.this, "Wrong pattern", Toast.LENGTH_SHORT).show();
+                            global.vibrate(100);
                         }
                     }
                 }
