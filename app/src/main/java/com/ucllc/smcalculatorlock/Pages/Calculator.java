@@ -226,8 +226,7 @@ public class Calculator extends AppCompatActivity {
         //Equal
         binding.equal.setOnClickListener(view -> {
             try {
-                int check = Integer.parseInt(expression);
-                if(check >= 1000 && check <= 9999){
+                if(4 == checkLength(expression)){
                     //Could be PIN
                     if(expression.equals(homePin)){
                         startActivity(new Intent(Calculator.this, Home.class));
@@ -261,6 +260,21 @@ public class Calculator extends AppCompatActivity {
             }
         });
     }
+
+    private int checkLength(String expression) {
+        int c = 0;
+        for(int i = 0; i < expression.length(); ++i){
+            try {
+                int k = Integer.parseInt(String.valueOf(expression.charAt(i)));
+                if(k >= 0 && k <= 10) ++c;
+            }
+            catch (Exception e){
+                --c;
+            }
+        }
+        return c;
+    }
+
     private void eval(String expression, CalculatorEvalCallback callback){
         evalClient.evaluateJavascript(expression, s -> callback.onDone((s.equals("null") || s.equals("")) ? "Error" : s));
     }
