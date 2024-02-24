@@ -226,7 +226,7 @@ public class Calculator extends AppCompatActivity {
         //Equal
         binding.equal.setOnClickListener(view -> {
             try {
-                if(4 == checkLength(expression)){
+                if(4 == expression.length() && 4 == checkLengthAsPin(expression)){
                     //Could be PIN
                     if(expression.equals(homePin)){
                         startActivity(new Intent(Calculator.this, Home.class));
@@ -261,7 +261,7 @@ public class Calculator extends AppCompatActivity {
         });
     }
 
-    private int checkLength(String expression) {
+    private int checkLengthAsPin(String expression) {
         int c = 0;
         for(int i = 0; i < expression.length(); ++i){
             try {
