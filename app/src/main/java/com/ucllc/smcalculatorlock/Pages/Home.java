@@ -2,6 +2,7 @@ package com.ucllc.smcalculatorlock.Pages;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -30,11 +31,24 @@ public class Home extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black_button));
 
         //Tab adapter
-        binding.homePager.setAdapter(new HomeFragmentAdapter(this));
-
-
-
-
+        HomeFragmentAdapter adapter = new HomeFragmentAdapter(this);
+        binding.homePager.setAdapter(adapter);
+        binding.homePager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                if(null != global.getContext()) {
+                    binding.tabVault.setTextColor(ContextCompat.getColor(global.getContext(),
+                            (0 == position) ? R.color.white : R.color.off_white
+                    ));
+                    binding.tabApps.setTextColor(ContextCompat.getColor(global.getContext(),
+                            (1 == position) ? R.color.white : R.color.off_white
+                    ));
+                    binding.tabFiles.setTextColor(ContextCompat.getColor(global.getContext(),
+                            (2 == position) ? R.color.white : R.color.off_white
+                    ));
+                }
+            }
+        });
 
         //Hooks
         final Dialog dialog = new Dialog(this);
@@ -53,5 +67,8 @@ public class Home extends AppCompatActivity {
             });
         }
         binding.key.setOnClickListener(v-> dialog.show());
+        binding.tabVault.setOnClickListener(v-> binding.homePager.setCurrentItem(0));
+        binding.tabApps.setOnClickListener(v-> binding.homePager.setCurrentItem(1));
+        binding.tabFiles.setOnClickListener(v-> binding.homePager.setCurrentItem(2));
     }
 }
