@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import com.ucllc.smcalculatorlock.Adapters.HomeFragmentAdapter;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Custom.Global;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
@@ -27,6 +28,11 @@ public class Home extends AppCompatActivity {
         global = new Global(this, this);
         dbHandler = new DBHandler(this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black_button));
+
+        //Tab adapter
+        binding.homePager.setAdapter(new HomeFragmentAdapter(this));
+
+
 
 
 
