@@ -4,11 +4,8 @@
     android:layout_height="match_parent"
     android:background="@color/midnight_black">
 
-    <TextView
-        android:id="@+id/tvExplorer"
-        android:text="Hello from Explorer!"
-        android:gravity="center"
-        android:textColor="@color/white"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/explorerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

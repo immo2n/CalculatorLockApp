@@ -51,4 +51,5 @@
     <string name="fa_lock"></string>
     <string name="fa_apps"></string>
     <string name="uf07b"></string>
+    <string name="folder_file">Folder/File</string>
 </resources>
