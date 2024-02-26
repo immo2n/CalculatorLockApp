@@ -54,7 +54,6 @@ public class FileExplorer extends Fragment {
             }
         });
 
-
         return binding.getRoot();
     }
 }

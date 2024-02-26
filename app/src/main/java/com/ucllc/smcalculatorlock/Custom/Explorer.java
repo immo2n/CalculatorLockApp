@@ -20,21 +20,24 @@ import java.util.Collections;
 import java.util.List;
 
 public class Explorer {
+    //Interfaces
     private final Context context;
     public Explorer(Context context) {
         this.context = context;
     }
-    public static enum FileType {
+    public enum FileType {
         IMAGE,
         VIDEO,
         AUDIO,
         ALL
     }
-    public static enum FileSort {
+    public enum FileSort {
         NAME,
         DATE,
         SIZE
     }
+
+    //Main Methods
     public void getMediaFiles(@NonNull FileType fileType, @NonNull AllFilesCallback callback) {
         if (noMediaFilesPermission()) {
             callback.onNoPermission();
