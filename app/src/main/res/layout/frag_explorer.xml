@@ -5,6 +5,7 @@
     android:background="@color/midnight_black">
 
     <TextView
+        android:id="@+id/tvExplorer"
         android:text="Hello from Explorer!"
         android:gravity="center"
         android:textColor="@color/white"
