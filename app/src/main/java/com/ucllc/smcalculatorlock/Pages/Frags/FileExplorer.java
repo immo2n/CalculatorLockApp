@@ -27,49 +27,48 @@ import com.ucllc.smcalculatorlock.databinding.FragExplorerBinding;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class FileExplorer extends Fragment {
     Explorer explorer;
+    List<String> pathHistory = new ArrayList<>();
+    private FragExplorerBinding binding;
+    private ExplorerUI explorerUI;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragExplorerBinding binding = FragExplorerBinding.inflate(inflater);
+         binding = FragExplorerBinding.inflate(inflater);
 
         explorer = new Explorer(requireContext());
-        ExplorerUI explorerUI = path -> {
-            binding.path.setText((path.equals(Environment.getExternalStorageDirectory().getPath()))? "Internal Storage" : path);
+        explorerUI = path -> {
+            pathHistory.add(path);
+            binding.path.setText(((path.equals(Environment.getExternalStorageDirectory().getPath())) ? "Internal Storage" : path)
+                    .replace(Environment.getExternalStorageDirectory().getPath(), "Internal Storage"));
         };
+
+        //Go back
+        binding.back.setOnClickListener(v -> {
+            if (!pathHistory.isEmpty()) {
+                pathHistory.remove(pathHistory.size() - 1);
+                if (!pathHistory.isEmpty()) {
+                    String previousPath = pathHistory.get(pathHistory.size() - 1);
+                    loadPath(previousPath);
+                } else {
+                    loadPath(Environment.getExternalStorageDirectory().getPath());
+                }
+            }
+        });
+
 
         //Set layout
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         binding.explorerView.setLayoutManager(layoutManager);
 
         //Base home files
-        explorer.explore(Environment.getExternalStorageDirectory().getPath(), Explorer.FileSort.NAME, new FilesInPathCallback() {
-            @Override
-            public void onSuccess(List<File> files) {
-                binding.explorerView.setAdapter(new FileManagerAdapter(files, explorer, explorerUI));
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onEmpty() {
-                Toast.makeText(requireContext(), "Empty", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNoPermission() {
-                Toast.makeText(requireContext(), "No Permission", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        loadPath(Environment.getExternalStorageDirectory().getPath());
         return binding.getRoot();
     }
     public static Drawable getFileIcon(File file, Context context){
@@ -182,5 +181,30 @@ public class FileExplorer extends Fragment {
         } else {
             return String.format("%.2f GB", (double) sizeInBytes / GB);
         }
+    }
+    private void loadPath(String path){
+        explorer.explore(path, Explorer.FileSort.NAME, new FilesInPathCallback() {
+            @Override
+            public void onSuccess(List<File> files) {
+                pathHistory.add(path);
+                explorerUI.onPathChanged(path);
+                binding.explorerView.setAdapter(new FileManagerAdapter(files, explorer, explorerUI));
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onEmpty() {
+                Toast.makeText(requireContext(), "Empty", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNoPermission() {
+                Toast.makeText(requireContext(), "No Permission", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

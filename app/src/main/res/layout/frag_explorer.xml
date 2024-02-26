@@ -6,6 +6,7 @@
     android:background="@color/midnight_black">
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
@@ -15,30 +16,41 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:background="@drawable/circular_hover"
-            android:padding="8dp"
             android:id="@+id/back"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:background="@drawable/circular_hover"
+            android:clickable="true"
             android:contentDescription="@string/back"
+            android:focusable="true"
+            android:padding="10dp"
             android:src="@drawable/back" />
 
         <TextView
             android:id="@+id/path"
-            android:padding="5dp"
-            android:ellipsize="middle"
-            android:singleLine="true"
-            android:fontFamily="@font/trebuc"
-            android:textSize="18sp"
-            android:gravity="center|start"
-            android:textColor="@color/white"
-            android:text="@string/internal_storage"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:ellipsize="middle"
+            android:fontFamily="@font/trebuc"
+            android:gravity="center|start"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:text="@string/internal_storage"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/off_white"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="51dp"
         android:id="@+id/explorerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

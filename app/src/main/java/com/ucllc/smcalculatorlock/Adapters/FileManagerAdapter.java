@@ -11,6 +11,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.squareup.picasso.Picasso;
 import com.ucllc.smcalculatorlock.Custom.Explorer;
 import com.ucllc.smcalculatorlock.Interfaces.ExplorerUI;
 import com.ucllc.smcalculatorlock.Interfaces.FilesInPathCallback;
@@ -55,6 +58,22 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
             }
         }
         else {
+            Explorer.FileType fileType = Explorer.fileType(file);
+            if(fileType == Explorer.FileType.IMAGE){
+                Picasso.get()
+                        .load(file)
+                        .resize(100, 100)
+                        .placeholder(R.drawable.file_image)
+                        .centerCrop()
+                        .into(holder.icon);
+            } else if (fileType == Explorer.FileType.VIDEO) {
+                Glide.with(explorer.getContext())
+                        .load(file)
+                        .apply(new RequestOptions().override(100, 100))
+                        .placeholder(R.drawable.file_video)
+                        .centerCrop()
+                        .into(holder.icon);
+            }
             holder.info.setText(String.format("%s · %s", FileExplorer.formatFileSize(file.length()), FileExplorer.formatLastModified(file.lastModified())));
         }
         //CLICK EVENT
