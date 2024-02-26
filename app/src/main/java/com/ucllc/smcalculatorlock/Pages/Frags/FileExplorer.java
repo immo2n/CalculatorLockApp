@@ -27,7 +27,7 @@ public class FileExplorer extends Fragment {
         FragExplorerBinding binding = FragExplorerBinding.inflate(inflater);
         explorer = new Explorer(requireContext());
 
-        explorer.explore(Environment.getExternalStorageDirectory().getPath(), new FilesInPathCallback() {
+        explorer.explore(Environment.getExternalStorageDirectory().getPath(), Explorer.FileSort.NAME, new FilesInPathCallback() {
             @Override
             public void onSuccess(List<File> files) {
                 Toast.makeText(requireContext(), "Files: " + files.size(), Toast.LENGTH_SHORT).show();

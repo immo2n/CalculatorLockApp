@@ -30,6 +30,11 @@ public class Explorer {
         AUDIO,
         ALL
     }
+    public static enum FileSort {
+        NAME,
+        DATE,
+        SIZE
+    }
     public void getMediaFiles(@NonNull FileType fileType, @NonNull AllFilesCallback callback) {
         if (noMediaFilesPermission()) {
             callback.onNoPermission();
@@ -86,7 +91,7 @@ public class Explorer {
             callback.failedToLoad(e);
         }
     }
-    public void explore(@NonNull String path, @NonNull FilesInPathCallback callback){
+    public void explore(@NonNull String path, @NonNull FileSort sort, @NonNull FilesInPathCallback callback){
         if(noMediaFilesPermission()){
             callback.onNoPermission();
             return;
@@ -96,7 +101,30 @@ public class Explorer {
             File[] list = new File(path).listFiles();
             if (null != list) {
                 Collections.addAll(r, list);
-                if (r.size() > 0) callback.onSuccess(r);
+                if (r.size() > 0) {
+                    if(sort == FileSort.NAME){
+                        r.sort((f1, f2) -> {
+                            if (f1.isDirectory() && f2.isFile()) return -1;
+                            else if (f1.isFile() && f2.isDirectory()) return 1;
+                            else return f1.getName().compareTo(f2.getName());
+                        });
+                    }
+                    else if(sort == FileSort.DATE){
+                        r.sort((f1, f2) -> {
+                            if (f1.isDirectory() && f2.isFile()) return -1;
+                            else if (f1.isFile() && f2.isDirectory()) return 1;
+                            else return Long.compare(f2.lastModified(), f1.lastModified());
+                        });
+                    }
+                    else if(sort == FileSort.SIZE){
+                        r.sort((f1, f2) -> {
+                            if (f1.isDirectory() && f2.isFile()) return -1;
+                            else if (f1.isFile() && f2.isDirectory()) return 1;
+                            else return Long.compare(f2.length(), f1.length());
+                        });
+                    }
+                    callback.onSuccess(r);
+                }
                 else callback.onEmpty();
             } else {
                 callback.onEmpty();
