@@ -1,5 +1,6 @@
 package com.ucllc.smcalculatorlock.Pages.Frags;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,12 +19,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.ucllc.smcalculatorlock.Adapters.FileManagerAdapter;
 import com.ucllc.smcalculatorlock.Custom.Explorer;
 import com.ucllc.smcalculatorlock.Interfaces.AllFilesCallback;
+import com.ucllc.smcalculatorlock.Interfaces.ExplorerUI;
 import com.ucllc.smcalculatorlock.Interfaces.FilesInPathCallback;
 import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.databinding.FragExplorerBinding;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class FileExplorer extends Fragment {
     Explorer explorer;
@@ -31,7 +37,11 @@ public class FileExplorer extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragExplorerBinding binding = FragExplorerBinding.inflate(inflater);
+
         explorer = new Explorer(requireContext());
+        ExplorerUI explorerUI = path -> {
+            binding.path.setText((path.equals(Environment.getExternalStorageDirectory().getPath()))? "Internal Storage" : path);
+        };
 
         //Set layout
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
@@ -41,7 +51,7 @@ public class FileExplorer extends Fragment {
         explorer.explore(Environment.getExternalStorageDirectory().getPath(), Explorer.FileSort.NAME, new FilesInPathCallback() {
             @Override
             public void onSuccess(List<File> files) {
-                binding.explorerView.setAdapter(new FileManagerAdapter(files));
+                binding.explorerView.setAdapter(new FileManagerAdapter(files, explorer, explorerUI));
             }
 
             @Override
@@ -152,5 +162,25 @@ public class FileExplorer extends Fragment {
             }
         }
         return r;
+    }
+    public static String formatLastModified(long lastModifiedTimestamp) {
+        Date lastModifiedDate = new Date(lastModifiedTimestamp);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy", Locale.ENGLISH);
+        return dateFormat.format(lastModifiedDate);
+    }
+    @SuppressLint("DefaultLocale")
+    public static String formatFileSize(long sizeInBytes) {
+        final long KB = 1024;
+        final long MB = KB * 1024;
+        final long GB = MB * 1024;
+        if (sizeInBytes < KB) {
+            return sizeInBytes + " B";
+        } else if (sizeInBytes < MB) {
+            return String.format("%.2f KB", (double) sizeInBytes / KB);
+        } else if (sizeInBytes < GB) {
+            return String.format("%.2f MB", (double) sizeInBytes / MB);
+        } else {
+            return String.format("%.2f GB", (double) sizeInBytes / GB);
+        }
     }
 }

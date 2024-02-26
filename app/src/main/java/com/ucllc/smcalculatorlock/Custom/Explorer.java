@@ -176,4 +176,8 @@ public class Explorer {
             return context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
         }
     }
+
+    public Context getContext() {
+        return context;
+    }
 }

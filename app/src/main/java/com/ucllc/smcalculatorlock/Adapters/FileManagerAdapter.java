@@ -6,10 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ucllc.smcalculatorlock.Custom.Explorer;
+import com.ucllc.smcalculatorlock.Interfaces.ExplorerUI;
+import com.ucllc.smcalculatorlock.Interfaces.FilesInPathCallback;
 import com.ucllc.smcalculatorlock.Pages.Frags.FileExplorer;
 import com.ucllc.smcalculatorlock.R;
 
@@ -18,8 +22,12 @@ import java.util.List;
 
 public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.ViewHolder> {
     List<File> fileList;
-    public FileManagerAdapter(List<File> fileList) {
+    Explorer explorer;
+    ExplorerUI callbackUI;
+    public FileManagerAdapter(List<File> fileList, Explorer explorer, ExplorerUI callbackUI) {
         this.fileList = fileList;
+        this.explorer = explorer;
+        this.callbackUI = callbackUI;
     }
 
     @NonNull
@@ -35,7 +43,54 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
         File file = fileList.get(position);
         holder.name.setText(file.getName());
         holder.icon.setImageDrawable(FileExplorer.getFileIcon(fileList.get(position), holder.icon.getContext()));
-        holder.info.setText(String.format("%d | %s | %d bytes", file.lastModified(), file.isDirectory() ? "Folder" : "File", file.length()));
+        if(file.isDirectory()){
+            holder.icon.setPadding(10, 10, 10, 10);
+            File[] files = file.listFiles();
+            if (files != null) {
+                int numItems = files.length;
+                long lastModified = file.lastModified();
+                holder.info.setText(String.format("%d item%s · %s", numItems, (numItems > 1)?"s":"" , FileExplorer.formatLastModified(lastModified)));
+            } else {
+                holder.info.setText(R.string.empty_folder);
+            }
+        }
+        else {
+            holder.info.setText(String.format("%s · %s", FileExplorer.formatFileSize(file.length()), FileExplorer.formatLastModified(file.lastModified())));
+        }
+        //CLICK EVENT
+        holder.itemView.setOnClickListener(v -> {
+            if (file.isDirectory()) {
+                explorer.explore(file.getPath(), Explorer.FileSort.NAME, new FilesInPathCallback() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onSuccess(List<File> files) {
+                        fileList.clear();
+                        fileList.addAll(files);
+                        callbackUI.onPathChanged(file.getPath());
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        //Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onEmpty() {
+                        //Toast.makeText(requireContext(), "Empty", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onNoPermission() {
+                        //Toast.makeText(requireContext(), "No Permission", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+            else {
+                //Act as file
+                Toast.makeText(explorer.getContext(), "File!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
