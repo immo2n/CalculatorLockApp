@@ -3,7 +3,6 @@ package com.ucllc.smcalculatorlock.Pages.Frags;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,8 +27,6 @@ import com.ucllc.smcalculatorlock.Custom.Explorer;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Interfaces.ExplorerUI;
 import com.ucllc.smcalculatorlock.Interfaces.FilesInPathCallback;
-import com.ucllc.smcalculatorlock.Pages.Home;
-import com.ucllc.smcalculatorlock.Pages.PatternLock;
 import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.databinding.FragExplorerBinding;
 

@@ -75,41 +75,98 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:id="@+id/tabVault"
-            android:focusable="true"
-            android:clickable="true"
-            android:textSize="30sp"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:text="@string/fa_lock"
-            android:fontFamily="@font/font_awesome_regular"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="100dp"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tabApps"
-            android:focusable="true"
-            android:clickable="true"
-            android:textSize="30sp"
-            android:gravity="center"
-            android:textColor="@color/off_white"
-            android:text="@string/fa_apps"
-            android:fontFamily="@font/font_awesome_regular"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/tabVault"
+                android:focusable="true"
+                android:clickable="true"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="@string/fa_lock"
+                android:fontFamily="@font/font_awesome_regular"
+                android:layout_width="100dp"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
 
-        <TextView
-            android:id="@+id/tabFiles"
-            android:focusable="true"
-            android:clickable="true"
-            android:textSize="30sp"
-            android:gravity="center"
-            android:textColor="@color/off_white"
-            android:text="@string/uf07b"
-            android:fontFamily="@font/font_awesome_regular"
+            <TextView
+                android:textSize="12sp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/trebuc"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="@string/vault"
+                android:id="@+id/vaultText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="100dp"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tabApps"
+                android:focusable="true"
+                android:clickable="true"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textColor="@color/off_white"
+                android:text="@string/fa_apps"
+                android:fontFamily="@font/font_awesome_regular"
+                android:layout_width="100dp"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
+
+            <TextView
+                android:textSize="12sp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/trebuc"
+                android:gravity="center"
+                android:textColor="@color/off_white"
+                android:text="@string/apps"
+                android:id="@+id/appsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="100dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tabFiles"
+                android:focusable="true"
+                android:clickable="true"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textColor="@color/off_white"
+                android:text="@string/fa_folder"
+                android:fontFamily="@font/font_awesome_regular"
+                android:layout_width="100dp"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
+
+            <TextView
+                android:textSize="12sp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/trebuc"
+                android:gravity="center"
+                android:textColor="@color/off_white"
+                android:text="@string/vault"
+                android:id="@+id/filesText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

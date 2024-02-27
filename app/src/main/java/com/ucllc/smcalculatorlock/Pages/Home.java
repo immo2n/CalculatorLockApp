@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.ucllc.smcalculatorlock.Adapters.HomeFragmentAdapter;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Custom.Global;
@@ -19,7 +21,6 @@ import com.ucllc.smcalculatorlock.databinding.ActivityHomeBinding;
 
 public class Home extends AppCompatActivity {
     ActivityHomeBinding binding;
-    private DBHandler dbHandler;
     private Global global;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,6 @@ public class Home extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         global = new Global(this, this);
-        dbHandler = new DBHandler(this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black_button));
 
         //Tab adapter
@@ -46,6 +46,17 @@ public class Home extends AppCompatActivity {
                     binding.tabFiles.setTextColor(ContextCompat.getColor(global.getContext(),
                             (2 == position) ? R.color.white : R.color.off_white
                     ));
+                    //Titles
+                    binding.vaultText.setTextColor(ContextCompat.getColor(global.getContext(),
+                            (0 == position) ? R.color.white : R.color.off_white
+                    ));
+                    binding.appsText.setTextColor(ContextCompat.getColor(global.getContext(),
+                            (1 == position) ? R.color.white : R.color.off_white
+                    ));
+                    binding.filesText.setTextColor(ContextCompat.getColor(global.getContext(),
+                            (2 == position) ? R.color.white : R.color.off_white
+                    ));
+                    YoYo.with(Techniques.ZoomIn).duration(120).playOn(binding.homePager);
                 }
             }
         });
@@ -67,11 +78,10 @@ public class Home extends AppCompatActivity {
             });
         }
         binding.key.setOnClickListener(v-> dialog.show());
-        binding.tabVault.setOnClickListener(v-> binding.homePager.setCurrentItem(0));
-        binding.tabApps.setOnClickListener(v-> binding.homePager.setCurrentItem(1));
-        binding.tabFiles.setOnClickListener(v-> binding.homePager.setCurrentItem(2));
-
-
+        binding.tabVault.setOnClickListener(v-> binding.homePager.setCurrentItem(0, false));
+        binding.tabApps.setOnClickListener(v-> binding.homePager.setCurrentItem(1, false));
+        binding.tabFiles.setOnClickListener(v-> binding.homePager.setCurrentItem(2, false));
+        binding.homePager.setUserInputEnabled(false);
 
     }
 }

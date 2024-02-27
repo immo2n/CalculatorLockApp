@@ -50,7 +50,7 @@
     <string name="change_pin_message">Your vault is locked with your PIN. You can change your PIN or change the PIN recovery pattern.</string>
     <string name="fa_lock"></string>
     <string name="fa_apps"></string>
-    <string name="uf07b"></string>
+    <string name="fa_folder"></string>
     <string name="folder_file">Folder/File</string>
     <string name="empty_folder">Empty folder</string>
     <string name="home">Home</string>
@@ -65,4 +65,5 @@
     <string name="date">Date</string>
     <string name="size">Size</string>
     <string name="show_hidden_files">Show hidden files</string>
+    <string name="apps">Apps</string>
 </resources>
