@@ -1,6 +1,7 @@
 package com.ucllc.smcalculatorlock.Custom;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -22,8 +23,10 @@ import java.util.List;
 public class Explorer {
     //Interfaces
     private final Context context;
-    public Explorer(Context context) {
+    private final Activity activity;
+    public Explorer(@NonNull Context context, @NonNull Activity activity) {
         this.context = context;
+        this.activity = activity;
     }
     public enum FileType {
         IMAGE,
@@ -90,50 +93,57 @@ public class Explorer {
                 });
                 addCursorToList(cursor, files);
             }
-
             callback.onSuccess(files);
         } catch (Exception e) {
             callback.failedToLoad(e);
         }
     }
-    public void explore(@NonNull String path, @NonNull FileSort sort, @NonNull FilesInPathCallback callback){
+    public void explore(@NonNull String path, @NonNull FileSort sort, boolean showHidden, @NonNull FilesInPathCallback callback){
         if(noMediaFilesPermission()){
             callback.onNoPermission();
             return;
         }
         try {
-            List<File> r = new ArrayList<>();
-            File[] list = new File(path).listFiles();
-            if (null != list) {
-                Collections.addAll(r, list);
-                if (r.size() > 0) {
-                    if(sort == FileSort.NAME){
-                        r.sort((f1, f2) -> {
-                            if (f1.isDirectory() && f2.isFile()) return -1;
-                            else if (f1.isFile() && f2.isDirectory()) return 1;
-                            else return f1.getName().compareTo(f2.getName());
-                        });
+            callback.loading();
+            new Thread(()-> {
+                List<File> r = new ArrayList<>();
+                File[] list = new File(path).listFiles();
+                if (null != list) {
+                    Collections.addAll(r, list);
+                    if (!showHidden) {
+                        r.removeIf(file -> file.getName().startsWith("."));
                     }
-                    else if(sort == FileSort.DATE){
-                        r.sort((f1, f2) -> {
-                            if (f1.isDirectory() && f2.isFile()) return -1;
-                            else if (f1.isFile() && f2.isDirectory()) return 1;
-                            else return Long.compare(f2.lastModified(), f1.lastModified());
-                        });
+                    if (r.size() > 0) {
+                        if(sort == FileSort.NAME){
+                            r.sort((f1, f2) -> {
+                                if (f1.isDirectory() && f2.isFile()) return -1;
+                                else if (f1.isFile() && f2.isDirectory()) return 1;
+                                else return f1.getName().compareTo(f2.getName());
+                            });
+                        }
+                        else if(sort == FileSort.DATE){
+                            r.sort((f1, f2) -> {
+                                if (f1.isDirectory() && f2.isFile()) return -1;
+                                else if (f1.isFile() && f2.isDirectory()) return 1;
+                                else return Long.compare(f2.lastModified(), f1.lastModified());
+                            });
+                        }
+                        else if(sort == FileSort.SIZE){
+                            r.sort((f1, f2) -> {
+                                if (f1.isDirectory() && f2.isFile()) return -1;
+                                else if (f1.isFile() && f2.isDirectory()) return 1;
+                                else return Long.compare(f2.length(), f1.length());
+                            });
+                        }
+                        activity.runOnUiThread(() -> callback.onSuccess(r));
                     }
-                    else if(sort == FileSort.SIZE){
-                        r.sort((f1, f2) -> {
-                            if (f1.isDirectory() && f2.isFile()) return -1;
-                            else if (f1.isFile() && f2.isDirectory()) return 1;
-                            else return Long.compare(f2.length(), f1.length());
-                        });
+                    else {
+                        activity.runOnUiThread(callback::onEmpty);
                     }
-                    callback.onSuccess(r);
+                } else {
+                    activity.runOnUiThread(() -> callback.onError(new Exception("NULL Files!")));
                 }
-                else callback.onEmpty();
-            } else {
-                callback.onEmpty();
-            }
+            }).start();
         }
         catch (Exception e){
             callback.onError(e);

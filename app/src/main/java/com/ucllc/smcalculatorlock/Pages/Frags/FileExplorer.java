@@ -1,13 +1,19 @@
 package com.ucllc.smcalculatorlock.Pages.Frags;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,55 +23,141 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ucllc.smcalculatorlock.Adapters.FileManagerAdapter;
+import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Custom.Explorer;
-import com.ucllc.smcalculatorlock.Interfaces.AllFilesCallback;
+import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Interfaces.ExplorerUI;
 import com.ucllc.smcalculatorlock.Interfaces.FilesInPathCallback;
+import com.ucllc.smcalculatorlock.Pages.Home;
+import com.ucllc.smcalculatorlock.Pages.PatternLock;
 import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.databinding.FragExplorerBinding;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 public class FileExplorer extends Fragment {
     Explorer explorer;
-    List<String> pathHistory = new ArrayList<>();
+    Stack<String> pathHistory = new Stack<>();
     private FragExplorerBinding binding;
     private ExplorerUI explorerUI;
+    public static boolean showHiddenFiles = false;
+    public static Explorer.FileSort sortMode = Explorer.FileSort.NAME;
+    private DBHandler dbHandler;
+    private String currentPath = Environment.getExternalStorageDirectory().getPath();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-         binding = FragExplorerBinding.inflate(inflater);
+        binding = FragExplorerBinding.inflate(inflater);
+        explorer = new Explorer(requireContext(), requireActivity());
+        dbHandler = new DBHandler(requireContext());
+        explorerUI = new ExplorerUI() {
+            @Override
+            public void onPathChanged(String path, boolean storeHistory) {
+                filesLoaded();
+                if(storeHistory) pathHistory.push(path);
+                binding.path.setText(((path.equals(Environment.getExternalStorageDirectory().getPath())) ? "Internal Storage" : path)
+                        .replace(Environment.getExternalStorageDirectory().getPath(), "Internal Storage"));
+                currentPath = path;
+            }
 
-        explorer = new Explorer(requireContext());
-        explorerUI = path -> {
-            pathHistory.add(path);
-            binding.path.setText(((path.equals(Environment.getExternalStorageDirectory().getPath())) ? "Internal Storage" : path)
-                    .replace(Environment.getExternalStorageDirectory().getPath(), "Internal Storage"));
+            @Override
+            public void loading() {
+                filesLoading();
+            }
+
+            @Override
+            public void onEmpty() {
+                filesOnEmpty();
+            }
+
+            @Override
+            public void onNoPermission() {
+                filesOnNoPermission();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                filesOnError();
+            }
         };
-
-        //Go back
         binding.back.setOnClickListener(v -> {
             if (!pathHistory.isEmpty()) {
-                pathHistory.remove(pathHistory.size() - 1);
+                pathHistory.pop();
                 if (!pathHistory.isEmpty()) {
-                    String previousPath = pathHistory.get(pathHistory.size() - 1);
+                    String previousPath = pathHistory.peek();
                     loadPath(previousPath);
                 } else {
                     loadPath(Environment.getExternalStorageDirectory().getPath());
                 }
+            } else {
+                Toast.makeText(requireContext(), "Home directory", Toast.LENGTH_SHORT).show();
             }
         });
-
 
         //Set layout
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         binding.explorerView.setLayoutManager(layoutManager);
+
+        //Setup settings
+        String check = dbHandler.getStateValue(StateKeys.SHOW_HIDDEN_FILES);
+        showHiddenFiles = null != check && check.equals(StateKeys.VALUE_TRUE);
+        check = dbHandler.getStateValue(StateKeys.SORT_MODE);
+        if(null != check){
+            switch (check) {
+                case StateKeys.SORT_BY_NAME:
+                    sortMode = Explorer.FileSort.NAME;
+                    break;
+                case StateKeys.SORT_BY_DATE:
+                    sortMode = Explorer.FileSort.DATE;
+                    break;
+                case StateKeys.SORT_BY_SIZE:
+                    sortMode = Explorer.FileSort.SIZE;
+                    break;
+            }
+        }
+
+        //Hooks
+        final Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialogue_explorer_settings);
+        if(null != dialog.getWindow()){
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.dialogue_background));
+            @SuppressLint("UseSwitchCompatOrMaterialCode")
+            Switch hiddenFileSwitch = dialog.getWindow().findViewById(R.id.switchShowHiddenFiles);
+            RadioGroup sortGroup = dialog.getWindow().findViewById(R.id.radioGroup);
+            hiddenFileSwitch.setChecked(showHiddenFiles);
+            hiddenFileSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                showHiddenFiles = isChecked;
+                dbHandler.setAppState(StateKeys.SHOW_HIDDEN_FILES, isChecked ? StateKeys.VALUE_TRUE : StateKeys.VALUE_FALSE);
+                loadPath(currentPath);
+            });
+            RadioButton radioName = dialog.getWindow().findViewById(R.id.radioButtonName);
+            RadioButton radioDate = dialog.getWindow().findViewById(R.id.radioButtonDate);
+            RadioButton radioSize = dialog.getWindow().findViewById(R.id.radioButtonSize);
+            sortGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                if(checkedId == radioName.getId()){
+                    sortMode = Explorer.FileSort.NAME;
+                    dbHandler.setAppState(StateKeys.SORT_MODE, StateKeys.SORT_BY_NAME);
+                }
+                else if(checkedId == radioDate.getId()){
+                    sortMode = Explorer.FileSort.DATE;
+                    dbHandler.setAppState(StateKeys.SORT_MODE, StateKeys.SORT_BY_DATE);
+                }
+                else if(checkedId == radioSize.getId()){
+                    sortMode = Explorer.FileSort.SIZE;
+                    dbHandler.setAppState(StateKeys.SORT_MODE, StateKeys.SORT_BY_SIZE);
+                }
+                loadPath(currentPath);
+            });
+        }
+        binding.settings.setOnClickListener(view -> dialog.show());
 
         //Base home files
         loadPath(Environment.getExternalStorageDirectory().getPath());
@@ -183,28 +275,55 @@ public class FileExplorer extends Fragment {
         }
     }
     private void loadPath(String path){
-        explorer.explore(path, Explorer.FileSort.NAME, new FilesInPathCallback() {
+        explorer.explore(path, sortMode, showHiddenFiles, new FilesInPathCallback() {
             @Override
             public void onSuccess(List<File> files) {
-                pathHistory.add(path);
-                explorerUI.onPathChanged(path);
+                filesLoaded();
+                explorerUI.onPathChanged(path, false);
                 binding.explorerView.setAdapter(new FileManagerAdapter(files, explorer, explorerUI));
+                currentPath = path;
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                filesOnError();
             }
 
             @Override
             public void onEmpty() {
-                Toast.makeText(requireContext(), "Empty", Toast.LENGTH_SHORT).show();
+                filesOnEmpty();
             }
 
             @Override
             public void onNoPermission() {
-                Toast.makeText(requireContext(), "No Permission", Toast.LENGTH_SHORT).show();
+                filesOnNoPermission();
+            }
+
+            @Override
+            public void loading() {
+                filesLoading();
             }
         });
+    }
+    private void filesLoading(){
+        binding.explorerView.setVisibility(View.GONE);
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.message.setText(R.string.loading);
+    }
+    private void filesLoaded(){
+        binding.loading.setVisibility(View.GONE);
+        binding.explorerView.setVisibility(View.VISIBLE);
+    }
+    private void filesOnEmpty(){
+        binding.explorerView.setVisibility(View.GONE);
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.message.setText(R.string.empty_text);
+    }
+    private void filesOnNoPermission(){
+    }
+    private void filesOnError(){
+        binding.explorerView.setVisibility(View.GONE);
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.message.setText(R.string.failed_to_load);
     }
 }

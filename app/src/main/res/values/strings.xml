@@ -55,4 +55,14 @@
     <string name="empty_folder">Empty folder</string>
     <string name="home">Home</string>
     <string name="internal_storage">Internal Storage</string>
+    <string name="loading">Loading…</string>
+    <string name="empty_text">Empty!</string>
+    <string name="failed_to_load">Failed to load!</string>
+    <string name="fa_cog"></string>
+    <string name="sort_by">Sort by</string>
+    <string name="explorer_settings">Explorer Settings</string>
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="size">Size</string>
+    <string name="show_hidden_files">Show hidden files</string>
 </resources>

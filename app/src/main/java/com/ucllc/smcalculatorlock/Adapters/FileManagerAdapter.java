@@ -79,29 +79,35 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
         //CLICK EVENT
         holder.itemView.setOnClickListener(v -> {
             if (file.isDirectory()) {
-                explorer.explore(file.getPath(), Explorer.FileSort.NAME, new FilesInPathCallback() {
+                explorer.explore(file.getPath(), FileExplorer.sortMode, FileExplorer.showHiddenFiles, new FilesInPathCallback() {
                     @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onSuccess(List<File> files) {
                         fileList.clear();
                         fileList.addAll(files);
-                        callbackUI.onPathChanged(file.getPath());
+                        callbackUI.onPathChanged(file.getPath(), true);
                         notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        //Toast.makeText(requireContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        callbackUI.onError(e);
                     }
 
                     @Override
                     public void onEmpty() {
-                        //Toast.makeText(requireContext(), "Empty", Toast.LENGTH_SHORT).show();
+                        callbackUI.onPathChanged(file.getPath(), true);
+                        callbackUI.onEmpty();
                     }
 
                     @Override
                     public void onNoPermission() {
-                        //Toast.makeText(requireContext(), "No Permission", Toast.LENGTH_SHORT).show();
+                        callbackUI.onNoPermission();
+                    }
+
+                    @Override
+                    public void loading() {
+                        callbackUI.loading();
                     }
                 });
             }

@@ -8,4 +8,5 @@ public interface FilesInPathCallback {
     void onError(Exception e);
     void onEmpty();
     void onNoPermission();
+    void loading();
 }

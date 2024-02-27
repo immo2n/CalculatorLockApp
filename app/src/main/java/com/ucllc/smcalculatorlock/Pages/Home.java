@@ -70,5 +70,8 @@ public class Home extends AppCompatActivity {
         binding.tabVault.setOnClickListener(v-> binding.homePager.setCurrentItem(0));
         binding.tabApps.setOnClickListener(v-> binding.homePager.setCurrentItem(1));
         binding.tabFiles.setOnClickListener(v-> binding.homePager.setCurrentItem(2));
+
+
+
     }
 }
