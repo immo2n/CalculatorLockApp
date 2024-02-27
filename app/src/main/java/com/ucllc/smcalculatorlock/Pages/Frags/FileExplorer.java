@@ -106,20 +106,6 @@ public class FileExplorer extends Fragment {
         //Setup settings
         String check = dbHandler.getStateValue(StateKeys.SHOW_HIDDEN_FILES);
         showHiddenFiles = null != check && check.equals(StateKeys.VALUE_TRUE);
-        check = dbHandler.getStateValue(StateKeys.SORT_MODE);
-        if(null != check){
-            switch (check) {
-                case StateKeys.SORT_BY_NAME:
-                    sortMode = Explorer.FileSort.NAME;
-                    break;
-                case StateKeys.SORT_BY_DATE:
-                    sortMode = Explorer.FileSort.DATE;
-                    break;
-                case StateKeys.SORT_BY_SIZE:
-                    sortMode = Explorer.FileSort.SIZE;
-                    break;
-            }
-        }
 
         //Hooks
         final Dialog dialog = new Dialog(requireContext());
@@ -131,16 +117,37 @@ public class FileExplorer extends Fragment {
             dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.dialogue_background));
             @SuppressLint("UseSwitchCompatOrMaterialCode")
             Switch hiddenFileSwitch = dialog.getWindow().findViewById(R.id.switchShowHiddenFiles);
-            RadioGroup sortGroup = dialog.getWindow().findViewById(R.id.radioGroup);
             hiddenFileSwitch.setChecked(showHiddenFiles);
+
+            RadioGroup sortGroup = dialog.getWindow().findViewById(R.id.radioGroup);
+            RadioButton radioName = dialog.getWindow().findViewById(R.id.radioButtonName);
+            RadioButton radioDate = dialog.getWindow().findViewById(R.id.radioButtonDate);
+            RadioButton radioSize = dialog.getWindow().findViewById(R.id.radioButtonSize);
+
+            //Check sort mode
+            check = dbHandler.getStateValue(StateKeys.SORT_MODE);
+            if(null != check){
+                switch (check) {
+                    case StateKeys.SORT_BY_NAME:
+                        sortMode = Explorer.FileSort.NAME;
+                        radioName.setChecked(true);
+                        break;
+                    case StateKeys.SORT_BY_DATE:
+                        sortMode = Explorer.FileSort.DATE;
+                        radioDate.setChecked(true);
+                        break;
+                    case StateKeys.SORT_BY_SIZE:
+                        sortMode = Explorer.FileSort.SIZE;
+                        radioSize.setChecked(true);
+                        break;
+                }
+            }
+
             hiddenFileSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 showHiddenFiles = isChecked;
                 dbHandler.setAppState(StateKeys.SHOW_HIDDEN_FILES, isChecked ? StateKeys.VALUE_TRUE : StateKeys.VALUE_FALSE);
                 loadPath(currentPath);
             });
-            RadioButton radioName = dialog.getWindow().findViewById(R.id.radioButtonName);
-            RadioButton radioDate = dialog.getWindow().findViewById(R.id.radioButtonDate);
-            RadioButton radioSize = dialog.getWindow().findViewById(R.id.radioButtonSize);
             sortGroup.setOnCheckedChangeListener((group, checkedId) -> {
                 if(checkedId == radioName.getId()){
                     sortMode = Explorer.FileSort.NAME;
