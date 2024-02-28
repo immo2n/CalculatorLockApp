@@ -66,4 +66,6 @@
     <string name="size">Size</string>
     <string name="show_hidden_files">Show hidden files</string>
     <string name="apps">Apps</string>
+    <string name="url_status">Url Status</string>
+    <string name="enter_url">Enter URL...</string>
 </resources>

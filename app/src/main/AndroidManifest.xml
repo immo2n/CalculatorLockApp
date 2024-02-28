@@ -24,6 +24,9 @@
         android:theme="@style/Theme.SMCalculatorLock"
         tools:targetApi="31">
         <activity
+            android:name=".Pages.Browser"
+            android:exported="false" />
+        <activity
             android:name=".Pages.PatternLock"
             android:exported="false" />
         <activity

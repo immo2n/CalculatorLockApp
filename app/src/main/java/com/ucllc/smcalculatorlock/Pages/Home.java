@@ -7,6 +7,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
@@ -82,6 +83,6 @@ public class Home extends AppCompatActivity {
         binding.tabApps.setOnClickListener(v-> binding.homePager.setCurrentItem(1, false));
         binding.tabFiles.setOnClickListener(v-> binding.homePager.setCurrentItem(2, false));
         binding.homePager.setUserInputEnabled(false);
-
+        binding.browser.setOnClickListener(view -> startActivity(new Intent(Home.this, Browser.class)));
     }
 }

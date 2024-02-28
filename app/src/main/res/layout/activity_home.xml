@@ -47,6 +47,17 @@
             android:background="@drawable/circular_hover"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:src="@drawable/browser"
+            android:id="@+id/browser"
+            android:contentDescription="@string/menu" />
+
+        <ImageView
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="15dp"
+            android:background="@drawable/circular_hover"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/key"
             android:id="@+id/key"
             android:contentDescription="@string/menu" />

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/midnight_black"
+    tools:context=".Pages.Browser">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:elevation="2dp"
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/midnight_black_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:background="@drawable/urlbox"
+            android:padding="5dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="5dp"
+                android:background="@drawable/circular_hover"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/browser"
+                android:id="@+id/urlIcon"
+                android:contentDescription="@string/url_status" />
+
+            <EditText
+                android:textSize="17sp"
+                android:textColorHint="@color/off_white"
+                android:hint="@string/enter_url"
+                android:fontFamily="@font/trebuc"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/menu"
+                android:id="@+id/urlInput"
+                android:autofillHints="name"
+                android:inputType="textUri"
+                tools:ignore="LabelFor"/>
+        </LinearLayout>
+
+        <ImageView
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="15dp"
+            android:background="@drawable/circular_hover"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/download"
+            android:id="@+id/download"
+            android:contentDescription="@string/menu" />
+
+    </LinearLayout>
+
+    <WebView
+        android:background="@color/midnight_black"
+        android:id="@+id/view"
+        android:layout_marginTop="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
