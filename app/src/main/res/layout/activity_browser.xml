@@ -36,6 +36,8 @@
                 android:contentDescription="@string/url_status" />
 
             <EditText
+                android:layout_marginBottom="-3dp"
+                android:backgroundTint="@android:color/transparent"
                 android:imeOptions="actionSearch"
                 android:textSize="17sp"
                 android:textColorHint="@color/off_white"

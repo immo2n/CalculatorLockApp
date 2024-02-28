@@ -2,8 +2,11 @@ package com.ucllc.smcalculatorlock.Custom;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -128,6 +131,21 @@ public class Global {
         view.getSettings().setJavaScriptEnabled(true);
         view.setWebViewClient(new WebViewClient(){
             @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.contains("FACEBOOK_PAGE_LINK_FLAG")) {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        Objects.requireNonNull(activity).startActivity(intent);
+                        return true;
+                    } catch (ActivityNotFoundException e) {
+                        return false;
+                    }
+                }
+                else {
+                    return false;
+                }
+            }
+            @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
                 if(error.getDescription().equals("net::ERR_FAILED")){
@@ -156,6 +174,10 @@ public class Global {
                 if(newProgress == 100){
                     progressBar.setVisibility(ProgressBar.GONE);
                     swipe.setRefreshing(false);
+                    if(view.getVisibility() == WebView.GONE) {
+                        errorView.setVisibility(LinearLayout.GONE);
+                        view.setVisibility(WebView.VISIBLE);
+                    }
                 }
                 addressBar.setText((token.equals(view.getUrl()))?"":view.getUrl());
                 if(token.equals(view.getUrl())){
