@@ -68,4 +68,9 @@
     <string name="apps">Apps</string>
     <string name="url_status">Url Status</string>
     <string name="enter_url">Enter URL...</string>
+    <string name="failed_to_load_page">Failed to load page</string>
+    <string name="try_again">Try again</string>
+    <string name="incognito_message">You are in Incognito Mode, your browsing history, passwords or cookies will not be saved. Your activity isn\'t hidden from websites you visit, your employer or your internet service provider.</string>
+    <string name="incognito_mode">Incognito Mode</string>
+    <string name="download">Download</string>
 </resources>
