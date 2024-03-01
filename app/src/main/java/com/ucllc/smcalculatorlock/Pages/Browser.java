@@ -58,6 +58,9 @@ public class Browser extends AppCompatActivity {
                     global.openAsSearch(binding.view, inputUrl.replace("https://", ""));
                     return true;
                 }
+                //Clear the views
+                binding.error.setVisibility(View.GONE);
+                binding.swipe.setVisibility(View.VISIBLE);
                 browser.loadUrl(uri.toString());
                 return true;
             }
@@ -78,7 +81,11 @@ public class Browser extends AppCompatActivity {
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
-        binding.swipe.setOnRefreshListener(() -> browser.reload());
+        binding.swipe.setOnRefreshListener(() -> {
+            binding.error.setVisibility(View.GONE);
+            binding.swipe.setVisibility(View.VISIBLE);
+            browser.reload();
+        });
 
         binding.urlIcon.setOnClickListener(view -> {
             final Dialog dialog = new Dialog(Browser.this);
@@ -94,7 +101,10 @@ public class Browser extends AppCompatActivity {
         binding.home.setOnClickListener(view -> {
             browser.clearCache(true);
             browser.clearHistory();
+            binding.error.setVisibility(View.GONE);
+            binding.swipe.setVisibility(View.VISIBLE);
             browser.loadUrl(Objects.requireNonNull(global.decrypt(Config.BROWSER_VALIDATOR)));
+            //Clear focus and hide keyboard
             binding.urlInput.clearFocus();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(binding.urlInput.getWindowToken(), 0);

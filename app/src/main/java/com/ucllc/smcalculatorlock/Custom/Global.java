@@ -127,7 +127,7 @@ public class Global {
     public WebView initBrowser(WebView view, ProgressBar progressBar, ImageView iconView, EditText addressBar, LinearLayout errorView, SwipeRefreshLayout swipe){
         if(view.getVisibility() == WebView.GONE) {
             errorView.setVisibility(LinearLayout.GONE);
-            view.setVisibility(WebView.VISIBLE);
+            swipe.setVisibility(WebView.VISIBLE);
         }
         String token = Objects.requireNonNull(decrypt(Config.BROWSER_VALIDATOR));
         view.getSettings().setJavaScriptEnabled(true);
@@ -155,17 +155,17 @@ public class Global {
                     view.reload();
                     return;
                 }
-                view.setVisibility(WebView.GONE);
-                errorView.setVisibility(LinearLayout.VISIBLE);
+                swipe.setVisibility(WebView.GONE);
                 TextView message = errorView.findViewById(R.id.failedMessage);
                 Button tryAgain = errorView.findViewById(R.id.tryAgain);
                 message.setText(error.getDescription());
                 tryAgain.setOnClickListener(v -> {
-                    view.setVisibility(WebView.VISIBLE);
                     errorView.setVisibility(LinearLayout.GONE);
+                    swipe.setVisibility(SwipeRefreshLayout.VISIBLE);
                     view.reload();
                 });
                 swipe.setRefreshing(false);
+                errorView.setVisibility(LinearLayout.VISIBLE);
             }
         });
         view.setWebChromeClient(new WebChromeClient(){
@@ -174,23 +174,19 @@ public class Global {
                 super.onProgressChanged(view, newProgress);
                 progressBar.setProgress(newProgress);
                 if (newProgress < 100 && progressBar.getVisibility() == ProgressBar.GONE) progressBar.setVisibility(ProgressBar.VISIBLE);
+
                 if(newProgress == 100){
                     progressBar.setVisibility(ProgressBar.GONE);
                     swipe.setRefreshing(false);
-                    if(view.getVisibility() == WebView.GONE) {
-                        errorView.setVisibility(LinearLayout.GONE);
-                        view.setVisibility(WebView.VISIBLE);
-                    }
                 }
+
                 addressBar.setText((token.equals(view.getUrl()))?"":view.getUrl());
                 if(token.equals(view.getUrl())){
                     Browser.homeCall = true;
-                    addressBar.setText("");
                     iconView.setImageDrawable(ContextCompat.getDrawable(Objects.requireNonNull(context), R.drawable.browser));
                 }
                 else {
                     Browser.homeCall = false;
-                    addressBar.setText(view.getUrl());
                 }
             }
             @Override
