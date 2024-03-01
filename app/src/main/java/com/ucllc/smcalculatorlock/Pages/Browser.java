@@ -46,14 +46,19 @@ public class Browser extends AppCompatActivity {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 String inputUrl = textView.getText().toString();
                 Uri uri = Uri.parse(inputUrl);
+                //Clear focus and hide keyboard
+                binding.urlInput.clearFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
                 if (uri.getScheme() == null) {
                     inputUrl = "https://" + inputUrl;
                     uri = Uri.parse(inputUrl);
                 }
+                if (uri.getHost() == null || !global.hasTopLevelDomain(uri.getHost())){
+                    global.openAsSearch(binding.view, inputUrl.replace("https://", ""));
+                    return true;
+                }
                 browser.loadUrl(uri.toString());
-                binding.urlInput.clearFocus();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
                 return true;
             }
             return false;

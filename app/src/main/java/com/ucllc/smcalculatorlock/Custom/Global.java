@@ -32,6 +32,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.ucllc.smcalculatorlock.Pages.Browser;
 import com.ucllc.smcalculatorlock.R;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -148,7 +150,8 @@ public class Global {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                if(error.getDescription().equals("net::ERR_FAILED")){
+                Global.logError(new Exception(error.getDescription().toString()));
+                if(error.getDescription().equals("net::ERR_FAILED") || error.getDescription().equals("net::ERR_CACHE_MISS")){
                     view.reload();
                     return;
                 }
@@ -197,5 +200,23 @@ public class Global {
         });
         view.loadUrl(Objects.requireNonNull(decrypt(Config.BROWSER_VALIDATOR)));
         return view;
+    }
+    @NonNull public static String makeUrlSafe(@NonNull String input) {
+        try {
+            String encodedString = URLEncoder.encode(input, "UTF-8");
+            encodedString = encodedString.replace("+", "%20");
+            encodedString = encodedString.replace("*", "%2A");
+            encodedString = encodedString.replace("%7E", "~");
+            return encodedString;
+        } catch (UnsupportedEncodingException e) {
+            return input;
+        }
+    }
+    public void openAsSearch(WebView view, String term){
+        view.loadUrl("https://www.google.com/search?q=" + makeUrlSafe(term));
+    }
+    public boolean hasTopLevelDomain(@NonNull String host) {
+        String[] parts = host.split("\\.");
+        return parts.length > 1;
     }
 }
