@@ -73,4 +73,6 @@
     <string name="incognito_message">You are in Incognito Mode, your browsing history, passwords or cookies will not be saved. Your activity isn\'t hidden from websites you visit, your employer or your internet service provider.</string>
     <string name="incognito_mode">Incognito Mode</string>
     <string name="download">Download</string>
+    <string name="explorer">Explorer</string>
+    <string name="app">App</string>
 </resources>

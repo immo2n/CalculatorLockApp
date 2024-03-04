@@ -15,7 +15,7 @@ import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
     private static final String DB_NAME = "CalculatorLock.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     private final String COL_ID = "id";
 
     //App State table
@@ -26,6 +26,10 @@ public class DBHandler extends SQLiteOpenHelper {
     //Calculator history table
     private final String CALC_HISTORY_TABLE = "calculator_history";
     private final String CALC_HISTORY_ENTRY = "entry";
+
+    //App Lock list table
+    private final String APP_LOCK_LIST_TABLE = "app_lock_list";
+    private final String APP_LOCK_LIST_PACKAGE = "package_name";
 
     public DBHandler(@NonNull Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -42,6 +46,46 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + CALC_HISTORY_ENTRY + " TEXT)";
         db.execSQL(query);
+        query = "CREATE TABLE " + APP_LOCK_LIST_TABLE + " ("
+                + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + APP_LOCK_LIST_PACKAGE + " TEXT)";
+        db.execSQL(query);
+    }
+
+    public void addLockedApp(@NonNull String packageName){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(APP_LOCK_LIST_PACKAGE, packageName);
+            db.insert(APP_LOCK_LIST_TABLE, null, values);
+        }
+        catch (Exception e){
+            Global.logError(e);
+        }
+    }
+
+    public void removeLockedApp(@NonNull String packageName){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL("DELETE FROM " + APP_LOCK_LIST_TABLE + " WHERE " + APP_LOCK_LIST_PACKAGE + " = ?", new String[]{packageName});
+        }
+        catch (Exception e){
+            Global.logError(e);
+        }
+    }
+
+    public boolean isAppLocked(@NonNull String packageName){
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor cursor = db.rawQuery("SELECT " + APP_LOCK_LIST_PACKAGE + " FROM " + APP_LOCK_LIST_TABLE + " WHERE " + APP_LOCK_LIST_PACKAGE + " = ?", new String[]{packageName});
+            boolean result = cursor.moveToFirst();
+            cursor.close();
+            return result;
+        }
+        catch (Exception e){
+            Global.logError(e);
+            return false;
+        }
     }
 
     public void setAppState(@NonNull String stateKey, @NonNull String value){
@@ -150,6 +194,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + APP_STATE_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CALC_HISTORY_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + APP_LOCK_LIST_TABLE);
         onCreate(db);
     }
 }

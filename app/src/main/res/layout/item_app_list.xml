@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:padding="5dp"
+    android:id="@+id/root"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_height="60dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:src="@drawable/icon_android"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/app" />
+
+    <LinearLayout
+        android:layout_marginEnd="60dp"
+        android:layout_marginStart="5dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:textColor="@color/white"
+            android:id="@+id/name"
+            android:ellipsize="middle"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:singleLine="true"
+            android:textSize="16sp"
+            android:fontFamily="@font/trebuc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:textColor="@color/gray"
+            android:id="@+id/info"
+            android:ellipsize="middle"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:singleLine="true"
+            android:textSize="13sp"
+            android:fontFamily="@font/trebuc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <Switch
+        android:id="@+id/lockSwitch"
+        android:layout_marginStart="-60dp"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+</LinearLayout>

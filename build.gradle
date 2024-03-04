@@ -2,6 +2,7 @@ buildscript {
     ext {
         agp_version = '8.2.2'
         agp_version1 = '8.0.0'
+        agp_version2 = '8.0.0'
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {

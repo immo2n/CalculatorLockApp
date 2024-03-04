@@ -123,6 +123,7 @@ public class Global {
     @Nullable public DBHandler getDBHandler(){
         return dbHandler;
     }
+    private boolean browserTryAgain = false;
     @SuppressLint("SetJavaScriptEnabled")
     public WebView initBrowser(WebView view, ProgressBar progressBar, ImageView iconView, EditText addressBar, LinearLayout errorView, SwipeRefreshLayout swipe){
         if(view.getVisibility() == WebView.GONE) {
@@ -150,6 +151,7 @@ public class Global {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
+                browserTryAgain = false;
                 Global.logError(new Exception(error.getDescription().toString()));
                 if(error.getDescription().equals("net::ERR_FAILED") || error.getDescription().equals("net::ERR_CACHE_MISS")){
                     view.reload();
@@ -160,8 +162,7 @@ public class Global {
                 Button tryAgain = errorView.findViewById(R.id.tryAgain);
                 message.setText(error.getDescription());
                 tryAgain.setOnClickListener(v -> {
-                    errorView.setVisibility(LinearLayout.GONE);
-                    swipe.setVisibility(SwipeRefreshLayout.VISIBLE);
+                    browserTryAgain = true;
                     view.reload();
                 });
                 swipe.setRefreshing(false);
@@ -176,6 +177,11 @@ public class Global {
                 if (newProgress < 100 && progressBar.getVisibility() == ProgressBar.GONE) progressBar.setVisibility(ProgressBar.VISIBLE);
 
                 if(newProgress == 100){
+                    if(browserTryAgain){
+                        errorView.setVisibility(LinearLayout.GONE);
+                        swipe.setVisibility(WebView.VISIBLE);
+                        browserTryAgain = false;
+                    }
                     progressBar.setVisibility(ProgressBar.GONE);
                     swipe.setRefreshing(false);
                 }

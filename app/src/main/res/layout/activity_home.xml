@@ -172,7 +172,7 @@
                 android:fontFamily="@font/trebuc"
                 android:gravity="center"
                 android:textColor="@color/off_white"
-                android:text="@string/vault"
+                android:text="@string/explorer"
                 android:id="@+id/filesText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

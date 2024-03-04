@@ -34,6 +34,20 @@ public class Calculator extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+
+        startActivity(new Intent(Calculator.this, Home.class));
+        finish();
+
+
+
+
+
+
+
+
         dbHandler = new DBHandler(this);
         /*SETUP CHECK STARTS*/
         if(dbHandler.getStateValue(StateKeys.SETUP) == null){
