@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -22,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -220,5 +220,8 @@ public class Global {
     public boolean hasTopLevelDomain(@NonNull String host) {
         String[] parts = host.split("\\.");
         return parts.length > 1;
+    }
+    public static boolean hasOverlayPermission(@NonNull Context context) {
+        return Settings.canDrawOverlays(context);
     }
 }

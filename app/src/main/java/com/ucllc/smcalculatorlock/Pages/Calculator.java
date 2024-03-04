@@ -13,6 +13,7 @@ import com.ucllc.smcalculatorlock.CalculatorPages.CalculatorHistory;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Custom.Global;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
+import com.ucllc.smcalculatorlock.Helpers.AppLockForegroundService;
 import com.ucllc.smcalculatorlock.Interfaces.CalculatorEvalCallback;
 import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.Setup;
@@ -35,18 +36,11 @@ public class Calculator extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
+        Intent serviceIntent = new Intent(this, AppLockForegroundService.class);
+        startService(serviceIntent);
 
         startActivity(new Intent(Calculator.this, Home.class));
         finish();
-
-
-
-
-
-
-
 
         dbHandler = new DBHandler(this);
         /*SETUP CHECK STARTS*/

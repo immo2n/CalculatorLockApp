@@ -75,4 +75,10 @@
     <string name="download">Download</string>
     <string name="explorer">Explorer</string>
     <string name="app">App</string>
+    <string name="enter_pin_2">Enter PIN</string>
+    <string name="enter_your_pin_to_unlock_the_app">Enter your PIN to unlock the app</string>
+    <string name="draw_your_pattern_to_unlock_the_app">Draw your pattern to unlock the app.</string>
+    <string name="accessibility_service_description">App Lock Accessibility Service</string>
+    <string name="cancel">CANCEL</string>
+    <string name="app_icon">App icon</string>
 </resources>
