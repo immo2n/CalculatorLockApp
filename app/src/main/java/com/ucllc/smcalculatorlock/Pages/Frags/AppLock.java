@@ -82,7 +82,6 @@ public class AppLock extends Fragment {
                 .setCancelable(false)
                 .show();
     }
-
     @Override
     public void onResume() {
         super.onResume();

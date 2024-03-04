@@ -1,13 +1,16 @@
 package com.ucllc.smcalculatorlock.Custom;
 
+import static androidx.core.content.ContextCompat.checkSelfPermission;
 import static androidx.core.content.ContextCompat.getSystemService;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AppOpsManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
