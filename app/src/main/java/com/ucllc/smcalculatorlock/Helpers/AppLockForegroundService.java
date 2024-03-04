@@ -16,6 +16,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;

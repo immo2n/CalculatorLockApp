@@ -1,7 +1,10 @@
 package com.ucllc.smcalculatorlock.Custom;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AppOpsManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -223,5 +226,10 @@ public class Global {
     }
     public static boolean hasOverlayPermission(@NonNull Context context) {
         return Settings.canDrawOverlays(context);
+    }
+    public static boolean hasUsageStatsPermission(Context context) {
+        AppOpsManager appOps = getSystemService(context, AppOpsManager.class);
+        int mode = Objects.requireNonNull(appOps).checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), context.getPackageName());
+        return mode == AppOpsManager.MODE_ALLOWED;
     }
 }

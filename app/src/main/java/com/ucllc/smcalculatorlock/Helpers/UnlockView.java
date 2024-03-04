@@ -50,6 +50,7 @@ public class UnlockView extends LinearLayout {
                 if(null == oldPattern){
                     Toast.makeText(context, "No pattern found! Or, can not decrypt.", Toast.LENGTH_SHORT).show();
                     hideOverlay((WindowManager) context.getSystemService(Context.WINDOW_SERVICE));
+                    return false;
                 }
                 else {
                     if(oldPattern.equals(arrayList.toString())){

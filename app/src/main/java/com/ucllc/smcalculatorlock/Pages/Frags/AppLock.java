@@ -2,6 +2,7 @@ package com.ucllc.smcalculatorlock.Pages.Frags;
 
 import static android.app.Activity.RESULT_OK;
 import static com.ucllc.smcalculatorlock.Custom.Global.hasOverlayPermission;
+import static com.ucllc.smcalculatorlock.Custom.Global.hasUsageStatsPermission;
 
 import android.Manifest;
 import android.content.Intent;
@@ -41,6 +42,9 @@ public class AppLock extends Fragment {
 
         accessibilityServiceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
+                if(hasUsageStatsPermission(requireContext())){
+                    Toast.makeText(requireContext(), "Permission granted!", Toast.LENGTH_SHORT).show();
+                }
                 if(hasOverlayPermission(requireContext())){
                     Toast.makeText(requireContext(), "Permission granted!", Toast.LENGTH_SHORT).show();
                 }
@@ -50,7 +54,7 @@ public class AppLock extends Fragment {
         if(!hasOverlayPermission(requireContext())){
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
             builder.setTitle("Display over other apps")
-                    .setMessage("We need Display over other apps permission to lock apps. Please grant the permission.")
+                    .setMessage("We need Display over other apps permission to lock apps. Please grant the permission.\nReason: To show lock screen.\nNecessity: Fundamental, can't function without it.")
                     .setPositiveButton("Open settings", (dialog, which) -> {
                         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                         accessibilityServiceLauncher.launch(intent);
@@ -58,7 +62,34 @@ public class AppLock extends Fragment {
                     .setCancelable(false)
                     .show();
         }
+        else {
+            if(!hasUsageStatsPermission(requireContext())){
+                propUsageStatsPermission();
+            }
+        }
 
         return binding.getRoot();
+    }
+
+    private void propUsageStatsPermission() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
+        builder.setTitle("Usage Access")
+                .setMessage("We need Usage Access permission to lock apps. Please grant the permission.\nReason: To detect which app the user is opening.\nNecessity: Fundamental, can't function without it.")
+                .setPositiveButton("Open settings", (dialog, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                    accessibilityServiceLauncher.launch(intent);
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(hasOverlayPermission(requireContext())){
+            if(!hasUsageStatsPermission(requireContext())){
+                propUsageStatsPermission();
+            }
+        }
     }
 }
