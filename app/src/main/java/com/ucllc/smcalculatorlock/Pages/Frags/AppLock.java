@@ -46,6 +46,7 @@ public class AppLock extends Fragment {
                 binding.mainView.setAdapter(new AppListAdapter(apps, requireContext()));
                 binding.loading.setVisibility(View.GONE);
                 binding.mainView.setVisibility(View.VISIBLE);
+                checkPermissions();
             });
         }).start();
 
@@ -59,6 +60,10 @@ public class AppLock extends Fragment {
                 }
             }
         });
+        return binding.getRoot();
+    }
+
+    private void checkPermissions() {
         if(!hasOverlayPermission(requireContext())){
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
             builder.setTitle("Display over other apps")
@@ -76,7 +81,5 @@ public class AppLock extends Fragment {
                 Global.propUsageStatsPermission(requireContext(), accessibilityServiceLauncher);
             }
         }
-
-        return binding.getRoot();
     }
 }

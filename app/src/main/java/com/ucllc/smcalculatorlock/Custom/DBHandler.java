@@ -5,17 +5,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.util.Pair;
 
 import androidx.annotation.NonNull;
+
+import com.ucllc.smcalculatorlock.DataClasses.LockedFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
     private static final String DB_NAME = "CalculatorLock.db";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
     private final String COL_ID = "id";
 
     //App State table
@@ -30,6 +30,14 @@ public class DBHandler extends SQLiteOpenHelper {
     //App Lock list table
     private final String APP_LOCK_LIST_TABLE = "app_lock_list";
     private final String APP_LOCK_LIST_PACKAGE = "package_name";
+
+    //Locked files table
+    private final String LOCKED_FILES_TABLE = "locked_files";
+    private final String LOCKED_FILES_SOURCE_PATH = "file_source_path";
+    private final String LOCKED_FILES_FILE_NAME = "file_name";
+    private final String LOCKED_FILES_FILE_DATE_TIME = "file_date_time";
+    private final String LOCKED_FILES_HASH = "file_hash";
+
 
     public DBHandler(@NonNull Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -50,6 +58,63 @@ public class DBHandler extends SQLiteOpenHelper {
                 + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + APP_LOCK_LIST_PACKAGE + " TEXT)";
         db.execSQL(query);
+        query = "CREATE TABLE " + LOCKED_FILES_TABLE + " ("
+                + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + LOCKED_FILES_SOURCE_PATH + " TEXT,"
+                + LOCKED_FILES_FILE_NAME + " TEXT,"
+                + LOCKED_FILES_FILE_DATE_TIME + " TEXT,"
+                + LOCKED_FILES_HASH + " TEXT)";
+        db.execSQL(query);
+    }
+
+    public void addLockedFile(@NonNull String sourcePath, @NonNull String fileName, @NonNull String dateTime, @NonNull String hash){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(LOCKED_FILES_SOURCE_PATH, sourcePath);
+            values.put(LOCKED_FILES_FILE_NAME, fileName);
+            values.put(LOCKED_FILES_FILE_DATE_TIME, dateTime);
+            values.put(LOCKED_FILES_HASH, hash);
+            db.insert(LOCKED_FILES_TABLE, null, values);
+        }
+        catch (Exception e){
+            Global.logError(e);
+        }
+    }
+
+    public void removeLockedFile(@NonNull String sourcePath, @NonNull String fileName){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL("DELETE FROM " + LOCKED_FILES_TABLE + " WHERE " + LOCKED_FILES_SOURCE_PATH + " = ? AND " + LOCKED_FILES_FILE_NAME + " = ?", new String[]{sourcePath, fileName});
+        }
+        catch (Exception e){
+            Global.logError(e);
+        }
+    }
+
+    public List<LockedFile> getLockedFiles(){
+        try {
+            List<LockedFile> list = null;
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor cursor = db.rawQuery("SELECT * FROM " + LOCKED_FILES_TABLE, null);
+            if (cursor.moveToFirst()) {
+                list = new ArrayList<>();
+                do {
+                    list.add(new LockedFile(
+                            cursor.getString(0),
+                            cursor.getString(1),
+                            cursor.getString(2),
+                            cursor.getString(3)
+                    ));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            return list;
+        }
+        catch (Exception e){
+            Global.logError(e);
+            return null;
+        }
     }
 
     public void addLockedApp(@NonNull String packageName){
@@ -195,6 +260,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + APP_STATE_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CALC_HISTORY_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + APP_LOCK_LIST_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + LOCKED_FILES_TABLE);
         onCreate(db);
     }
 }
