@@ -1,12 +1,17 @@
 package com.ucllc.smcalculatorlock.Pages;
 
-import android.Manifest;
+import static com.ucllc.smcalculatorlock.Custom.Global.hasOverlayPermission;
+import static com.ucllc.smcalculatorlock.Custom.Global.hasUsageStatsPermission;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
@@ -22,6 +27,7 @@ import com.ucllc.smcalculatorlock.databinding.ActivityHomeBinding;
 public class Home extends AppCompatActivity {
     ActivityHomeBinding binding;
     private Global global;
+    public static boolean appLockPermissionCheck = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,5 +89,29 @@ public class Home extends AppCompatActivity {
         binding.tabFiles.setOnClickListener(v-> binding.homePager.setCurrentItem(2, false));
         binding.homePager.setUserInputEnabled(false);
         binding.browser.setOnClickListener(view -> startActivity(new Intent(Home.this, Browser.class)));
+    }
+
+    private final ActivityResultLauncher<Intent> accessibilityServiceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() == RESULT_OK) {
+            if(hasUsageStatsPermission(this)){
+                Toast.makeText(this, "Permission granted!", Toast.LENGTH_SHORT).show();
+            }
+            if(hasOverlayPermission(this)){
+                Toast.makeText(this, "Permission granted!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    });
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(appLockPermissionCheck){
+            if(hasOverlayPermission(this)){
+                if(!hasUsageStatsPermission(this)){
+                    Global.propUsageStatsPermission(this, accessibilityServiceLauncher);
+                }
+            }
+            appLockPermissionCheck = false;
+        }
     }
 }

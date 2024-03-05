@@ -30,11 +30,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ucllc.smcalculatorlock.Pages.Browser;
 import com.ucllc.smcalculatorlock.R;
 
@@ -234,5 +236,16 @@ public class Global {
         AppOpsManager appOps = getSystemService(context, AppOpsManager.class);
         int mode = Objects.requireNonNull(appOps).checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), context.getPackageName());
         return mode == AppOpsManager.MODE_ALLOWED;
+    }
+    public static void propUsageStatsPermission(Context context, ActivityResultLauncher<Intent> accessibilityServiceLauncher) {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+        builder.setTitle("Usage Access")
+                .setMessage("We need Usage Access permission to lock apps. Please grant the permission.\nReason: To detect which app the user is opening.\nNecessity: Fundamental, can't function without it.")
+                .setPositiveButton("Open settings", (dialog, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                    accessibilityServiceLauncher.launch(intent);
+                })
+                .setCancelable(false)
+                .show();
     }
 }

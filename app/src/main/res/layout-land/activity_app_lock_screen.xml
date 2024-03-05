@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/midnight_black">
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/trebuc"
+            android:text="@string/draw_your_pattern"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/trebuc"
+            android:text="@string/draw_your_pattern_to_unlock_the_app"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            tools:layout_editor_absoluteX="29dp" />
+
+        <ImageView
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:id="@+id/icon"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/icon_android"
+            app:layout_constraintBottom_toTopOf="@+id/patternView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/message"
+            android:contentDescription="@string/app_icon" />
+
+    </LinearLayout>
+
+    <com.itsxtt.patternlock.PatternLockView
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:id="@+id/patternView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:plv_regularDotRadiusRatio="0.2"
+        app:plv_errorDotRadiusRatio="0.2"
+        app:plv_selectedDotRadiusRatio="0.2"
+        app:layout_constraintTop_toBottomOf="@+id/icon" />
+
+</LinearLayout>

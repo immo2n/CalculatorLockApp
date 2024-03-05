@@ -55,24 +55,38 @@
             </intent-filter>
         </receiver>
         <activity
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
             android:name=".Pages.Browser"
             android:exported="false" />
         <activity
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
             android:name=".Pages.PatternLock"
             android:exported="false" />
         <activity
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
             android:name=".Pages.Home"
             android:exported="false" />
         <activity
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
             android:name=".Pages.PinSetup"
             android:exported="false" />
         <activity
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
             android:name=".Setup"
             android:exported="false" />
         <activity
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
             android:name=".CalculatorPages.CalculatorHistory"
             android:exported="false" />
         <activity
+            tools:ignore="LockedOrientationActivity"
+            android:screenOrientation="portrait"
             android:name=".Pages.Calculator"
             android:exported="true" >
             <intent-filter>

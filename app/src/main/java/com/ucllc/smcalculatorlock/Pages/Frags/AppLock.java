@@ -25,7 +25,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ucllc.smcalculatorlock.Adapters.AppListAdapter;
+import com.ucllc.smcalculatorlock.Custom.Global;
 import com.ucllc.smcalculatorlock.Helpers.AppListHelper;
+import com.ucllc.smcalculatorlock.Pages.Home;
 import com.ucllc.smcalculatorlock.databinding.FragApplockBinding;
 
 import java.util.List;
@@ -58,37 +60,17 @@ public class AppLock extends Fragment {
                     .setPositiveButton("Open settings", (dialog, which) -> {
                         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                         accessibilityServiceLauncher.launch(intent);
+                        Home.appLockPermissionCheck = true;
                     })
                     .setCancelable(false)
                     .show();
         }
         else {
             if(!hasUsageStatsPermission(requireContext())){
-                propUsageStatsPermission();
+                Global.propUsageStatsPermission(requireContext(), accessibilityServiceLauncher);
             }
         }
 
         return binding.getRoot();
-    }
-
-    private void propUsageStatsPermission() {
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
-        builder.setTitle("Usage Access")
-                .setMessage("We need Usage Access permission to lock apps. Please grant the permission.\nReason: To detect which app the user is opening.\nNecessity: Fundamental, can't function without it.")
-                .setPositiveButton("Open settings", (dialog, which) -> {
-                    Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-                    accessibilityServiceLauncher.launch(intent);
-                })
-                .setCancelable(false)
-                .show();
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(hasOverlayPermission(requireContext())){
-            if(!hasUsageStatsPermission(requireContext())){
-                propUsageStatsPermission();
-            }
-        }
     }
 }
