@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import com.ucllc.smcalculatorlock.R;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Handler;
 
 @SuppressLint("ViewConstructor")
 public class UnlockView extends LinearLayout {
@@ -56,11 +58,19 @@ public class UnlockView extends LinearLayout {
                     if(oldPattern.equals(arrayList.toString())){
                         hideOverlay((WindowManager) context.getSystemService(Context.WINDOW_SERVICE));
                     }
+                    else {
+                        showWrongPattern(view.findViewById(R.id.message));
+                    }
                 }
                 return false;
             }
         });
         addView(view);
+    }
+
+    private void showWrongPattern(TextView message) {
+        message.setText(R.string.wrong_pattern_try_again);
+        new android.os.Handler().postDelayed(() -> message.setText(R.string.draw_your_pattern_to_unlock_the_app), 2000);
     }
 
     public void hideOverlay(WindowManager windowManager) {

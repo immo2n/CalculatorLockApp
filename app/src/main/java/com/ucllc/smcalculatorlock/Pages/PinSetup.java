@@ -58,6 +58,11 @@ public class PinSetup extends AppCompatActivity {
             }
         });
         binding.equal.setOnClickListener(view -> {
+            if(pin.length() < 4){
+                global.vibrate(80);
+                Toast.makeText(PinSetup.this, "PIN must be 4 digits", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if(holderPin == null){
                 holderPin = pin;
                 binding.pinMessage.setText(R.string.confirm_your_pin);

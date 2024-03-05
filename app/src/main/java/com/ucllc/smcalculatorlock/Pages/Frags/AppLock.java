@@ -38,9 +38,16 @@ public class AppLock extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragApplockBinding binding = FragApplockBinding.inflate(inflater);
-        List<AppListHelper.AppInfo> apps = AppListHelper.getInstalledApps(requireContext());
-        binding.getRoot().setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.getRoot().setAdapter(new AppListAdapter(apps, requireContext()));
+
+        new Thread(() -> {
+            List<AppListHelper.AppInfo> apps = AppListHelper.getInstalledApps(requireContext());
+            requireActivity().runOnUiThread(() -> {
+                binding.mainView.setLayoutManager(new LinearLayoutManager(requireContext()));
+                binding.mainView.setAdapter(new AppListAdapter(apps, requireContext()));
+                binding.loading.setVisibility(View.GONE);
+                binding.mainView.setVisibility(View.VISIBLE);
+            });
+        }).start();
 
         accessibilityServiceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
@@ -52,7 +59,6 @@ public class AppLock extends Fragment {
                 }
             }
         });
-
         if(!hasOverlayPermission(requireContext())){
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
             builder.setTitle("Display over other apps")

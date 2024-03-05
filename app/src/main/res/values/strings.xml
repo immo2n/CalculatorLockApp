@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">SM Calculator Lock</string>
     <string name="ac">AC</string>
     <string name="fa_backspace"></string>
@@ -67,7 +67,7 @@
     <string name="show_hidden_files">Show hidden files</string>
     <string name="apps">Apps</string>
     <string name="url_status">Url Status</string>
-    <string name="enter_url">Enter URL...</string>
+    <string name="enter_url">Enter URL…</string>
     <string name="failed_to_load_page">Failed to load page</string>
     <string name="try_again">Try again</string>
     <string name="incognito_message">You are in Incognito Mode, your browsing history, passwords or cookies will not be saved. Your activity isn\'t hidden from websites you visit, your employer or your internet service provider.</string>
@@ -79,6 +79,8 @@
     <string name="enter_your_pin_to_unlock_the_app">Enter your PIN to unlock the app</string>
     <string name="draw_your_pattern_to_unlock_the_app">Draw your pattern to unlock the app.</string>
     <string name="accessibility_service_description">App Lock Accessibility Service</string>
-    <string name="cancel">CANCEL</string>
+    <string name="cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="app_icon">App icon</string>
+    <string name="wrong_pattern_try_again">Wrong pattern! Try again.</string>
+    <string name="loading_apps">Loading apps…</string>
 </resources>
