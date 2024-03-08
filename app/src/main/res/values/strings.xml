@@ -83,4 +83,8 @@
     <string name="app_icon">App icon</string>
     <string name="wrong_pattern_try_again">Wrong pattern! Try again.</string>
     <string name="loading_apps">Loading apps…</string>
+    <string name="unknown_file_folder">Unknown file/folder</string>
+    <string name="no_information">No information</string>
+    <string name="lock_icon">Lock icon</string>
+    <string name="lock_files">Lock files</string>
 </resources>

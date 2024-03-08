@@ -57,6 +57,7 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/off_white"
@@ -86,5 +87,44 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"/>
     </RelativeLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/lockerButton"
+        android:background="@drawable/rounded_back"
+        android:layout_marginBottom="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/circular_hover"
+            android:id="@+id/cancelSelection"
+            android:src="@drawable/close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="5dp"
+            android:contentDescription="@string/lock_icon" />
+
+        <TextView
+            android:padding="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:id="@+id/lockerText"
+            android:fontFamily="@font/trebuc"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/lock_files"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

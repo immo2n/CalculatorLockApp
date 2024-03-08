@@ -6,6 +6,8 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.ucllc.smcalculatorlock.Adapters.FileManagerAdapter;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Custom.Explorer;
@@ -32,12 +36,16 @@ import com.ucllc.smcalculatorlock.databinding.FragExplorerBinding;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
 public class FileExplorer extends Fragment {
+    public interface OnFileSelectedCallback {
+        void onSelect(File file);
+    }
     Explorer explorer;
     Stack<String> pathHistory = new Stack<>();
     private FragExplorerBinding binding;
@@ -46,8 +54,11 @@ public class FileExplorer extends Fragment {
     public static Explorer.FileSort sortMode = Explorer.FileSort.NAME;
     private DBHandler dbHandler;
     private String currentPath = Environment.getExternalStorageDirectory().getPath();
+    private OnFileSelectedCallback fileSelectedCallback;
+    public static List<File> lockableFiles;
     @Nullable
     @Override
+    @SuppressLint("DefaultLocale")
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragExplorerBinding.inflate(inflater);
         explorer = new Explorer(requireContext(), requireActivity());
@@ -95,6 +106,7 @@ public class FileExplorer extends Fragment {
                 Toast.makeText(requireContext(), "Home directory", Toast.LENGTH_SHORT).show();
             }
         });
+        lockableFiles = new ArrayList<>();
 
         //Set layout
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
@@ -162,10 +174,38 @@ public class FileExplorer extends Fragment {
             });
         }
         binding.settings.setOnClickListener(view -> dialog.show());
+        binding.cancelSelection.setOnClickListener(view -> {
+            lockableFiles = new ArrayList<>();
+            lockerUIChange(0);
+        });
+
+        //Locker button logic & interface
+        YoYo.with(Techniques.SlideOutDown).duration(300).playOn(binding.lockerButton);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> requireActivity().runOnUiThread(() -> binding.lockerButton.setVisibility(View.VISIBLE)), 300);
+        fileSelectedCallback = (file) -> {
+            int temp = lockableFiles.size();
+            if(lockableFiles.contains(file)) lockableFiles.remove(file);
+            else lockableFiles.add(file);
+            lockerUIChange(temp);
+        };
 
         //Base home files
         loadPath(Environment.getExternalStorageDirectory().getPath());
+
         return binding.getRoot();
+    }
+    @SuppressLint("DefaultLocale")
+    private void lockerUIChange(int temp){
+        if(lockableFiles.size() == 0){
+            YoYo.with(Techniques.ZoomOut).duration(300).playOn(binding.lockerButton);
+            YoYo.with(Techniques.SlideOutDown).duration(300).playOn(binding.lockerButton);
+        } else if (lockableFiles.size() == 1 && temp == 0) {
+            YoYo.with(Techniques.ZoomIn).duration(300).playOn(binding.lockerButton);
+            YoYo.with(Techniques.SlideInUp).duration(300).playOn(binding.lockerButton);
+        }
+        if(lockableFiles.size() > 0){
+            binding.lockerText.setText(String.format("%s (%d)", requireActivity().getString(R.string.lock_files), lockableFiles.size()));
+        }
     }
     public static Drawable getFileIcon(File file, Context context){
         Drawable r = ContextCompat.getDrawable(context, R.drawable.folder);
@@ -284,7 +324,7 @@ public class FileExplorer extends Fragment {
             public void onSuccess(List<File> files) {
                 filesLoaded();
                 explorerUI.onPathChanged(path, false);
-                binding.explorerView.setAdapter(new FileManagerAdapter(files, explorer, explorerUI));
+                binding.explorerView.setAdapter(new FileManagerAdapter(files, explorer, explorerUI, fileSelectedCallback));
                 currentPath = path;
             }
 

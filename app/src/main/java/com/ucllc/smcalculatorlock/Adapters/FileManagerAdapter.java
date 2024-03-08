@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,10 +29,12 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
     List<File> fileList;
     Explorer explorer;
     ExplorerUI callbackUI;
-    public FileManagerAdapter(List<File> fileList, Explorer explorer, ExplorerUI callbackUI) {
+    FileExplorer.OnFileSelectedCallback fileSelectedCallback;
+    public FileManagerAdapter(List<File> fileList, Explorer explorer, ExplorerUI callbackUI, FileExplorer.OnFileSelectedCallback fileSelectedCallback) {
         this.fileList = fileList;
         this.explorer = explorer;
         this.callbackUI = callbackUI;
+        this.fileSelectedCallback = fileSelectedCallback;
     }
 
     @NonNull
@@ -116,6 +120,9 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
                 Toast.makeText(explorer.getContext(), "File!", Toast.LENGTH_SHORT).show();
             }
         });
+        //SELECTION EVENT
+        holder.selectionSwitch.setChecked(FileExplorer.lockableFiles.contains(file));
+        holder.selectionSwitch.setOnCheckedChangeListener((compoundButton, b) -> fileSelectedCallback.onSelect(file));
     }
 
     @Override
@@ -126,11 +133,13 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
         TextView name, info;
+        CheckBox selectionSwitch;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.icon);
             name = itemView.findViewById(R.id.name);
             info = itemView.findViewById(R.id.info);
+            selectionSwitch = itemView.findViewById(R.id.selectionSwitch);
         }
     }
 }
