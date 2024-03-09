@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -38,8 +39,11 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Stack;
 
 public class FileExplorer extends Fragment {
@@ -56,9 +60,10 @@ public class FileExplorer extends Fragment {
     private String currentPath = Environment.getExternalStorageDirectory().getPath();
     private OnFileSelectedCallback fileSelectedCallback;
     public static List<File> lockableFiles;
+    private float explorerReloadY = 0;
     @Nullable
     @Override
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "NotifyDataSetChanged"})
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragExplorerBinding.inflate(inflater);
         explorer = new Explorer(requireContext(), requireActivity());
@@ -155,6 +160,7 @@ public class FileExplorer extends Fragment {
             hiddenFileSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 showHiddenFiles = isChecked;
                 dbHandler.setAppState(StateKeys.SHOW_HIDDEN_FILES, isChecked ? StateKeys.VALUE_TRUE : StateKeys.VALUE_FALSE);
+                explorerReloadY = binding.explorerView.getScrollY();
                 loadPath(currentPath);
             });
             sortGroup.setOnCheckedChangeListener((group, checkedId) -> {
@@ -170,12 +176,15 @@ public class FileExplorer extends Fragment {
                     sortMode = Explorer.FileSort.SIZE;
                     dbHandler.setAppState(StateKeys.SORT_MODE, StateKeys.SORT_BY_SIZE);
                 }
+                explorerReloadY = binding.explorerView.getScrollY();
                 loadPath(currentPath);
             });
         }
         binding.settings.setOnClickListener(view -> dialog.show());
         binding.cancelSelection.setOnClickListener(view -> {
             lockableFiles = new ArrayList<>();
+            explorerReloadY = binding.explorerView.getScrollY();
+            loadPath(currentPath);
             lockerUIChange(0);
         });
 
@@ -184,8 +193,12 @@ public class FileExplorer extends Fragment {
         new Handler(Looper.getMainLooper()).postDelayed(() -> requireActivity().runOnUiThread(() -> binding.lockerButton.setVisibility(View.VISIBLE)), 300);
         fileSelectedCallback = (file) -> {
             int temp = lockableFiles.size();
-            if(lockableFiles.contains(file)) lockableFiles.remove(file);
-            else lockableFiles.add(file);
+            if(lockableFiles.contains(file)){
+                lockableFiles.remove(file);
+            }
+            else {
+                lockableFiles.add(file);
+            }
             lockerUIChange(temp);
         };
 
@@ -325,6 +338,10 @@ public class FileExplorer extends Fragment {
                 filesLoaded();
                 explorerUI.onPathChanged(path, false);
                 binding.explorerView.setAdapter(new FileManagerAdapter(files, explorer, explorerUI, fileSelectedCallback));
+                if(explorerReloadY > 0){
+                    binding.explorerView.setScaleY(explorerReloadY);
+                    explorerReloadY = 0;
+                }
                 currentPath = path;
             }
 
