@@ -1,21 +1,27 @@
 package com.ucllc.smcalculatorlock.Adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
 import com.ucllc.smcalculatorlock.Custom.Explorer;
+import com.ucllc.smcalculatorlock.Custom.Global;
 import com.ucllc.smcalculatorlock.Interfaces.ExplorerUI;
 import com.ucllc.smcalculatorlock.Interfaces.FilesInPathCallback;
 import com.ucllc.smcalculatorlock.Pages.Frags.FileExplorer;
@@ -116,7 +122,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
             }
             else {
                 //Act as file
-                Toast.makeText(explorer.getContext(), "File!", Toast.LENGTH_SHORT).show();
+                openFileInExternalApp(explorer.getContext(), file);
             }
         });
         //SELECTION EVENT - RESET - SET
@@ -151,5 +157,26 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
             info = itemView.findViewById(R.id.info);
             selectionSwitch = itemView.findViewById(R.id.selectionSwitch);
         }
+    }
+    public static void openFileInExternalApp(Context context, File file) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            Uri fileUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
+            intent.setDataAndType(fileUri, getMimeType(file.getAbsolutePath()));
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            context.startActivity(intent);
+        }
+        catch (Exception e){
+            Global.logError(e);
+            Toast.makeText(context, "Can't open file!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());
+        }
+        return type;
     }
 }

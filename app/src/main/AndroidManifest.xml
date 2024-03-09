@@ -40,6 +40,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SMCalculatorLock"
         tools:targetApi="31" >
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.ucllc.smcalculatorlock.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
         <service android:name=".Helpers.AppLockForegroundService"
             android:exported="false"
             tools:ignore="ForegroundServicePermission" />

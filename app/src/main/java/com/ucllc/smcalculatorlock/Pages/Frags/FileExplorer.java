@@ -29,6 +29,8 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.ucllc.smcalculatorlock.Adapters.FileManagerAdapter;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Custom.Explorer;
+import com.ucllc.smcalculatorlock.Custom.Global;
+import com.ucllc.smcalculatorlock.Custom.Locker;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Interfaces.ExplorerUI;
 import com.ucllc.smcalculatorlock.Interfaces.FilesInPathCallback;
@@ -37,6 +39,7 @@ import com.ucllc.smcalculatorlock.databinding.FragExplorerBinding;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +61,7 @@ public class FileExplorer extends Fragment {
     private boolean lockListLock = false;
     private OnFileSelectedCallback fileSelectedCallback;
     public static HashMap<File, CheckBox> lockableFiles;
+    private Locker locker;
     @Nullable
     @Override
     @SuppressLint({"DefaultLocale", "NotifyDataSetChanged"})
@@ -65,6 +69,24 @@ public class FileExplorer extends Fragment {
         binding = FragExplorerBinding.inflate(inflater);
         explorer = new Explorer(requireContext(), requireActivity());
         dbHandler = new DBHandler(requireContext());
+        locker = new Locker(new Global(requireContext(), requireActivity()));
+
+        //Locker Logic
+        binding.lockerText.setOnClickListener(view -> {
+            if(lockableFiles.size() == 0) return;
+            Toast.makeText(requireContext(), "Locking...", Toast.LENGTH_SHORT).show();
+            new Thread(() -> {
+                int c = locker.lockFiles(new ArrayList<>(lockableFiles.keySet()));
+                requireActivity().runOnUiThread(() -> {
+                    Toast.makeText(requireContext(), c + " files locked", Toast.LENGTH_SHORT).show();
+                    lockableFiles = new HashMap<>();
+                    lockerUIChange();
+                    loadPath(currentPath);
+                });
+            }).start();
+        });
+
+
         explorerUI = new ExplorerUI() {
             @Override
             public void onPathChanged(String path, boolean storeHistory) {

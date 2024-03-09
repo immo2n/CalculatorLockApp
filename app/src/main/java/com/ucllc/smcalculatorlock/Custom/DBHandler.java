@@ -67,14 +67,14 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void addLockedFile(@NonNull String sourcePath, @NonNull String fileName, @NonNull String dateTime, @NonNull String hash){
+    public void addLockedFile(LockedFile lockedFile){
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
-            values.put(LOCKED_FILES_SOURCE_PATH, sourcePath);
-            values.put(LOCKED_FILES_FILE_NAME, fileName);
-            values.put(LOCKED_FILES_FILE_DATE_TIME, dateTime);
-            values.put(LOCKED_FILES_HASH, hash);
+            values.put(LOCKED_FILES_SOURCE_PATH, lockedFile.getSourcePath());
+            values.put(LOCKED_FILES_FILE_NAME, lockedFile.getFileName());
+            values.put(LOCKED_FILES_FILE_DATE_TIME, lockedFile.getDate());
+            values.put(LOCKED_FILES_HASH, lockedFile.getHash());
             db.insert(LOCKED_FILES_TABLE, null, values);
         }
         catch (Exception e){
@@ -82,10 +82,10 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    public void removeLockedFile(@NonNull String sourcePath, @NonNull String fileName){
+    public void removeLockedFile(@NonNull String hash){
         try {
             SQLiteDatabase db = this.getWritableDatabase();
-            db.execSQL("DELETE FROM " + LOCKED_FILES_TABLE + " WHERE " + LOCKED_FILES_SOURCE_PATH + " = ? AND " + LOCKED_FILES_FILE_NAME + " = ?", new String[]{sourcePath, fileName});
+            db.execSQL("DELETE FROM " + LOCKED_FILES_TABLE + " WHERE " + LOCKED_FILES_HASH + " = ?", new String[]{hash});
         }
         catch (Exception e){
             Global.logError(e);
@@ -110,6 +110,28 @@ public class DBHandler extends SQLiteOpenHelper {
             }
             cursor.close();
             return list;
+        }
+        catch (Exception e){
+            Global.logError(e);
+            return null;
+        }
+    }
+
+    public LockedFile getFileByHash(@NonNull String hash){
+        try {
+            LockedFile result = null;
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor cursor = db.rawQuery("SELECT * FROM " + LOCKED_FILES_TABLE + " WHERE " + LOCKED_FILES_HASH + " = ?", new String[]{hash});
+            if (cursor.moveToFirst()) {
+                result = new LockedFile(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3)
+                );
+            }
+            cursor.close();
+            return result;
         }
         catch (Exception e){
             Global.logError(e);
