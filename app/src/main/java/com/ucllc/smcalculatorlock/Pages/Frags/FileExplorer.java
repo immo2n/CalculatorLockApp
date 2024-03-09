@@ -37,18 +37,15 @@ import com.ucllc.smcalculatorlock.databinding.FragExplorerBinding;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Stack;
 
 public class FileExplorer extends Fragment {
     public interface OnFileSelectedCallback {
-        void onSelect(File file);
+        void onSelect(File file, CheckBox checkBox);
     }
     Explorer explorer;
     Stack<String> pathHistory = new Stack<>();
@@ -58,9 +55,9 @@ public class FileExplorer extends Fragment {
     public static Explorer.FileSort sortMode = Explorer.FileSort.NAME;
     private DBHandler dbHandler;
     private String currentPath = Environment.getExternalStorageDirectory().getPath();
+    private boolean lockListLock = false;
     private OnFileSelectedCallback fileSelectedCallback;
-    public static List<File> lockableFiles;
-    private float explorerReloadY = 0;
+    public static HashMap<File, CheckBox> lockableFiles;
     @Nullable
     @Override
     @SuppressLint({"DefaultLocale", "NotifyDataSetChanged"})
@@ -111,7 +108,7 @@ public class FileExplorer extends Fragment {
                 Toast.makeText(requireContext(), "Home directory", Toast.LENGTH_SHORT).show();
             }
         });
-        lockableFiles = new ArrayList<>();
+        lockableFiles = new HashMap<>();
 
         //Set layout
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
@@ -160,7 +157,6 @@ public class FileExplorer extends Fragment {
             hiddenFileSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 showHiddenFiles = isChecked;
                 dbHandler.setAppState(StateKeys.SHOW_HIDDEN_FILES, isChecked ? StateKeys.VALUE_TRUE : StateKeys.VALUE_FALSE);
-                explorerReloadY = binding.explorerView.getScrollY();
                 loadPath(currentPath);
             });
             sortGroup.setOnCheckedChangeListener((group, checkedId) -> {
@@ -176,30 +172,41 @@ public class FileExplorer extends Fragment {
                     sortMode = Explorer.FileSort.SIZE;
                     dbHandler.setAppState(StateKeys.SORT_MODE, StateKeys.SORT_BY_SIZE);
                 }
-                explorerReloadY = binding.explorerView.getScrollY();
                 loadPath(currentPath);
             });
         }
         binding.settings.setOnClickListener(view -> dialog.show());
         binding.cancelSelection.setOnClickListener(view -> {
-            lockableFiles = new ArrayList<>();
-            explorerReloadY = binding.explorerView.getScrollY();
-            loadPath(currentPath);
-            lockerUIChange(0);
+            lockListLock = true;
+            for (File file : lockableFiles.keySet()) {
+                CheckBox checkBox = lockableFiles.get(file);
+                if (checkBox != null) {
+                    checkBox.setChecked(false);
+                }
+            }
+            lockListLock = false;
+            lockableFiles = new HashMap<>();
+            lockerUIChange();
         });
 
         //Locker button logic & interface
         YoYo.with(Techniques.SlideOutDown).duration(300).playOn(binding.lockerButton);
         new Handler(Looper.getMainLooper()).postDelayed(() -> requireActivity().runOnUiThread(() -> binding.lockerButton.setVisibility(View.VISIBLE)), 300);
-        fileSelectedCallback = (file) -> {
-            int temp = lockableFiles.size();
-            if(lockableFiles.contains(file)){
-                lockableFiles.remove(file);
+        fileSelectedCallback = (file, checkBox) -> {
+            if(lockListLock) return;
+            if(file.isDirectory()){
+                File[] files = file.listFiles();
+                if(files != null) {
+                    for(File f : files) {
+                        processSelectedFile(f, null);
+                    }
+                }
+                lockableFiles.put(file, checkBox);
             }
             else {
-                lockableFiles.add(file);
+                processSelectedFile(file, checkBox);
             }
-            lockerUIChange(temp);
+            lockerUIChange();
         };
 
         //Base home files
@@ -207,17 +214,31 @@ public class FileExplorer extends Fragment {
 
         return binding.getRoot();
     }
-    @SuppressLint("DefaultLocale")
-    private void lockerUIChange(int temp){
-        if(lockableFiles.size() == 0){
-            YoYo.with(Techniques.ZoomOut).duration(300).playOn(binding.lockerButton);
-            YoYo.with(Techniques.SlideOutDown).duration(300).playOn(binding.lockerButton);
-        } else if (lockableFiles.size() == 1 && temp == 0) {
-            YoYo.with(Techniques.ZoomIn).duration(300).playOn(binding.lockerButton);
-            YoYo.with(Techniques.SlideInUp).duration(300).playOn(binding.lockerButton);
+
+    private void processSelectedFile(File file, CheckBox checkBox) {
+        if(lockableFiles.containsKey(file)){
+            lockableFiles.remove(file);
         }
+        else {
+            lockableFiles.put(file, checkBox);
+        }
+    }
+
+    private boolean lockerShowing = false;
+    @SuppressLint("DefaultLocale")
+    private void lockerUIChange(){
         if(lockableFiles.size() > 0){
             binding.lockerText.setText(String.format("%s (%d)", requireActivity().getString(R.string.lock_files), lockableFiles.size()));
+        }
+        if(lockableFiles.size() == 0){
+            YoYo.with(Techniques.SlideOutDown).duration(300).playOn(binding.lockerButton);
+            YoYo.with(Techniques.ZoomOut).duration(300).playOn(binding.lockerButton);
+            lockerShowing = false;
+        } else {
+            if(lockerShowing) return;
+            YoYo.with(Techniques.ZoomIn).duration(300).playOn(binding.lockerButton);
+            YoYo.with(Techniques.SlideInUp).duration(300).playOn(binding.lockerButton);
+            lockerShowing = true;
         }
     }
     public static Drawable getFileIcon(File file, Context context){
@@ -338,10 +359,6 @@ public class FileExplorer extends Fragment {
                 filesLoaded();
                 explorerUI.onPathChanged(path, false);
                 binding.explorerView.setAdapter(new FileManagerAdapter(files, explorer, explorerUI, fileSelectedCallback));
-                if(explorerReloadY > 0){
-                    binding.explorerView.setScaleY(explorerReloadY);
-                    explorerReloadY = 0;
-                }
                 currentPath = path;
             }
 

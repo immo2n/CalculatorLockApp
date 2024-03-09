@@ -6,6 +6,8 @@
     android:background="@color/midnight_black">
 
     <LinearLayout
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="5dp"
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="50dp"

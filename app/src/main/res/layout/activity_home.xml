@@ -29,6 +29,7 @@
             android:contentDescription="@string/menu" />
 
         <TextView
+            android:id="@+id/pageTitle"
             android:fontFamily="@font/trebuc"
             android:paddingStart="10dp"
             android:paddingEnd="0dp"

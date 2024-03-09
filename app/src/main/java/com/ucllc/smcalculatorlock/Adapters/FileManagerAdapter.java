@@ -119,9 +119,20 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
                 Toast.makeText(explorer.getContext(), "File!", Toast.LENGTH_SHORT).show();
             }
         });
-        //SELECTION EVENT
-        holder.selectionSwitch.setChecked(FileExplorer.lockableFiles.contains(file));
-        holder.selectionSwitch.setOnCheckedChangeListener((compoundButton, b) -> fileSelectedCallback.onSelect(file));
+        //SELECTION EVENT - RESET - SET
+        holder.selectionSwitch.setOnCheckedChangeListener(null);
+        if(file.isDirectory()){
+            File[] list = file.listFiles();
+            if(null == list || list.length == 0){
+                holder.selectionSwitch.setEnabled(false);
+                return;
+            }
+        }
+        holder.selectionSwitch.setEnabled(true);
+        boolean check = FileExplorer.lockableFiles.containsKey(file);
+        holder.selectionSwitch.setChecked(check);
+        if(check) FileExplorer.lockableFiles.put(file, holder.selectionSwitch);
+        holder.selectionSwitch.setOnCheckedChangeListener((compoundButton, b) -> fileSelectedCallback.onSelect(file, holder.selectionSwitch));
     }
 
     @Override

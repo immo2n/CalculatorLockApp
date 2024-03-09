@@ -63,6 +63,17 @@ public class Home extends AppCompatActivity {
                             (2 == position) ? R.color.white : R.color.off_white
                     ));
                     YoYo.with(Techniques.ZoomIn).duration(120).playOn(binding.homePager);
+                    switch (position){
+                        case 0:
+                            binding.pageTitle.setText(getString(R.string.vault));
+                            break;
+                        case 1:
+                            binding.pageTitle.setText(getString(R.string.apps));
+                            break;
+                        case 2:
+                            binding.pageTitle.setText(getString(R.string.explorer));
+                            break;
+                    }
                 }
             }
         });
