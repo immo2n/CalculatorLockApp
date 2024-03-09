@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,9 +26,14 @@ import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.databinding.ActivityHomeBinding;
 
 public class Home extends AppCompatActivity {
+    public interface OnFragmentBack {
+        void onBack();
+    }
+    public static OnFragmentBack onFragmentBack = null;
     ActivityHomeBinding binding;
     private Global global;
     public static boolean appLockPermissionCheck = false;
+    public static int currentTabIndex = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +42,27 @@ public class Home extends AppCompatActivity {
         global = new Global(this, this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black_button));
 
+        //Back click handle
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if(onFragmentBack == null){
+                    finish();
+                }
+                else {
+                    onFragmentBack.onBack();
+                }
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         //Tab adapter
-        HomeFragmentAdapter adapter = new HomeFragmentAdapter(this);
+        HomeFragmentAdapter adapter = new HomeFragmentAdapter(this, this::finish);
         binding.homePager.setAdapter(adapter);
         binding.homePager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
+                currentTabIndex = position;
                 if(null != global.getContext()) {
                     binding.tabVault.setTextColor(ContextCompat.getColor(global.getContext(),
                             (0 == position) ? R.color.white : R.color.off_white

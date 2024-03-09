@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.ucllc.smcalculatorlock.Adapters.FileManagerAdapter;
+import com.ucllc.smcalculatorlock.Adapters.HomeFragmentAdapter;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Custom.Explorer;
 import com.ucllc.smcalculatorlock.Custom.Global;
@@ -34,6 +35,7 @@ import com.ucllc.smcalculatorlock.Custom.Locker;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Interfaces.ExplorerUI;
 import com.ucllc.smcalculatorlock.Interfaces.FilesInPathCallback;
+import com.ucllc.smcalculatorlock.Pages.Home;
 import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.databinding.FragExplorerBinding;
 
@@ -47,8 +49,12 @@ import java.util.Locale;
 import java.util.Stack;
 
 public class FileExplorer extends Fragment {
+    private final HomeFragmentAdapter.UserActionEvents actionEvents;
     public interface OnFileSelectedCallback {
         void onSelect(File file, CheckBox checkBox);
+    }
+    public FileExplorer(HomeFragmentAdapter.UserActionEvents actionEvents) {
+        this.actionEvents = actionEvents;
     }
     Explorer explorer;
     Stack<String> pathHistory = new Stack<>();
@@ -71,6 +77,7 @@ public class FileExplorer extends Fragment {
         dbHandler = new DBHandler(requireContext());
         locker = new Locker(new Global(requireContext(), requireActivity()));
 
+        Home.onFragmentBack = () -> binding.back.performClick();
         //Locker Logic
         binding.lockerText.setOnClickListener(view -> {
             if(lockableFiles.size() == 0) return;
@@ -127,7 +134,7 @@ public class FileExplorer extends Fragment {
                     loadPath(Environment.getExternalStorageDirectory().getPath());
                 }
             } else {
-                Toast.makeText(requireContext(), "Home directory", Toast.LENGTH_SHORT).show();
+                actionEvents.onCloseUiSignal();
             }
         });
         lockableFiles = new HashMap<>();
@@ -161,10 +168,6 @@ public class FileExplorer extends Fragment {
             check = dbHandler.getStateValue(StateKeys.SORT_MODE);
             if(null != check){
                 switch (check) {
-                    case StateKeys.SORT_BY_NAME:
-                        sortMode = Explorer.FileSort.NAME;
-                        radioName.setChecked(true);
-                        break;
                     case StateKeys.SORT_BY_DATE:
                         sortMode = Explorer.FileSort.DATE;
                         radioDate.setChecked(true);
@@ -173,6 +176,9 @@ public class FileExplorer extends Fragment {
                         sortMode = Explorer.FileSort.SIZE;
                         radioSize.setChecked(true);
                         break;
+                    default:
+                        sortMode = Explorer.FileSort.NAME;
+                        radioName.setChecked(true);
                 }
             }
 
