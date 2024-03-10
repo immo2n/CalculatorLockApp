@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -73,6 +74,8 @@ public class Calculator extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black));
         expression = "";
         history = new ArrayList<>();
+
+        Toast.makeText(this, "THIS IS A DEMO VERSION BY UNICORE LLC", Toast.LENGTH_LONG).show();
 
         //Ready the PIN
         String rawPin = dbHandler.getStateValue(StateKeys.PIN);
