@@ -17,6 +17,7 @@ import android.widget.Toast;
 import android.Manifest;
 
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
+import com.ucllc.smcalculatorlock.Custom.Global;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Pages.Calculator;
 import com.ucllc.smcalculatorlock.Pages.PinSetup;

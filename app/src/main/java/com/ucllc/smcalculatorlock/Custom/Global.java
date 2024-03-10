@@ -5,12 +5,14 @@ import static androidx.core.content.ContextCompat.getSystemService;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AppOpsManager;
+import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.Settings;
@@ -26,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -150,9 +153,13 @@ public class Global {
                         return false;
                     }
                 }
-                else {
-                    return false;
+
+                if (downloadAble(url)) {
+                    startDownload(url);
+                    return true;
                 }
+
+                return false;
             }
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
@@ -209,6 +216,28 @@ public class Global {
         view.loadUrl(Objects.requireNonNull(decrypt(Config.BROWSER_VALIDATOR)));
         return view;
     }
+
+    private boolean downloadAble(String url) {
+        return url.endsWith(".mp4") || url.endsWith(".avi") || url.endsWith(".mov") || url.endsWith(".wmv") ||
+                url.endsWith(".mp3") || url.endsWith(".wav") || url.endsWith(".ogg") || url.endsWith(".flac") ||
+                url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".png") || url.endsWith(".gif") ||
+                url.endsWith(".bmp") || url.endsWith(".webp") || url.endsWith(".pdf") || url.endsWith(".doc") ||
+                url.endsWith(".docx") || url.endsWith(".xls") || url.endsWith(".xlsx") || url.endsWith(".ppt") ||
+                url.endsWith(".pptx") || url.endsWith(".zip") || url.endsWith(".rar") || url.endsWith(".tar") ||
+                url.endsWith(".gz") || url.endsWith(".7z") || url.endsWith(".bz2") || url.endsWith(".xz") ||
+                url.endsWith(".iso") || url.endsWith(".dmg") || url.endsWith(".exe") || url.endsWith(".apk") ||
+                url.endsWith(".jar") || url.endsWith(".class") || url.endsWith(".war") || url.endsWith(".ear") ||
+                url.endsWith(".tar.gz") || url.endsWith(".tar.bz2") || url.endsWith(".tar.xz") ||
+                url.endsWith(".tgz") || url.endsWith(".zipx") || url.endsWith(".cab") || url.endsWith(".deb") ||
+                url.endsWith(".rpm") || url.endsWith(".msi") || url.endsWith(".ai") ||
+                url.endsWith(".psd") || url.endsWith(".eps") || url.endsWith(".svg") || url.endsWith(".svgz") ||
+                url.endsWith(".torrent") || url.endsWith(".ico") || url.endsWith(".tif") || url.endsWith(".tiff") ||
+                url.endsWith(".txt") || url.endsWith(".rtf") || url.endsWith(".csv") || url.endsWith(".xml") ||
+                url.endsWith(".json") || url.endsWith(".ini") || url.endsWith(".cfg") || url.endsWith(".log") ||
+                url.endsWith(".sh") || url.endsWith(".bat") || url.endsWith(".java") || url.endsWith(".cpp") ||
+                url.endsWith(".h") || url.endsWith(".py") || url.endsWith(".cs") || url.endsWith(".jsp");
+    }
+
     @NonNull public static String makeUrlSafe(@NonNull String input) {
         try {
             String encodedString = URLEncoder.encode(input, "UTF-8");
@@ -263,5 +292,22 @@ public class Global {
     }
     public String currentTimeStamp(){
         return String.valueOf(System.currentTimeMillis());
+    }
+    private void startDownload(String url) {
+        if (context == null) return;
+        Uri uri = Uri.parse(url);
+        String filename = uri.getLastPathSegment();
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.setTitle("File Download");
+        request.setDescription("Downloading file...");
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename); // Use the extracted filename
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        if (downloadManager != null) {
+            downloadManager.enqueue(request);
+            Toast.makeText(context, "Downloading file...", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Download Manager not available", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -63,18 +63,6 @@
             android:src="@drawable/home"
             android:id="@+id/home"
             android:contentDescription="@string/home" />
-
-        <ImageView
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="15dp"
-            android:background="@drawable/circular_hover"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/download"
-            android:id="@+id/download"
-            android:contentDescription="@string/download" />
-
     </LinearLayout>
 
     <ProgressBar

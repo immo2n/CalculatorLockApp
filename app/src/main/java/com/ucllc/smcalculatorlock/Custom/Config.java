@@ -10,7 +10,7 @@ public class Config {
     Also, the VALIDATOR should not be changed. If changed browser will not work.*
     */
     private static final Pair<String, String> ENCRYPTION_KEY_PAIR = new Pair<>("JX[6AozP3jq1:^=F:Nr1m>/,t@>vU+8329", "1.0");
-    public static final String BROWSER_VALIDATOR = "wpiRgMA5XvhNdYZAa4z_nTJh4hFVGwQx6W8ljtNRT3dzgn8qOszFPFatPJ7h4F_vSThAclxk-YLE-si_cm2dAYcF2ZIjnDQNvWqiyv1b4T0";
+    public static final String BROWSER_VALIDATOR = "jySI0uaUVT4xTtqPJ0X3xWXYwsSjxHtGyRup_TN4dT1os9BgtmPJHr9GpLTqdFEeZ2h4kNPI7dXyunpNXswXXLwG8J9zLV-H-OK24W1B3fU";
     /*!!!!*******************************************************************!!!!*/
     protected static final String ENCRYPTION_KEY = ENCRYPTION_KEY_PAIR.first;
     public static final String ENCRYPTION_VERSION = ENCRYPTION_KEY_PAIR.second;
