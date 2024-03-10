@@ -74,7 +74,7 @@ public class AppLock extends Fragment {
     private void loadApps() {
         if(null != tabThread && tabThread.isAlive()) return;
         tabThread = new Thread(() -> {
-            if(Home.currentTabIndex != 1) return;
+            if(Home.currentTabIndex != 1 || !isAdded()) return;
             List<AppListHelper.AppInfo> apps = AppListHelper.getInstalledApps(requireContext());
             requireActivity().runOnUiThread(() -> {
                 binding.mainView.setLayoutManager(new LinearLayoutManager(requireContext()));

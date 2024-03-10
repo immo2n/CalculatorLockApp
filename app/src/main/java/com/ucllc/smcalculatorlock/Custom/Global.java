@@ -54,7 +54,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Global {
-
+    public boolean browserTryAgain = false;
     //**********************GLOBAL STATE KEYS STARTS**********************//
     public static boolean LOG_ERRORS = true;
     public static final String LOG_TAG = "UNICORE_DEV";
@@ -134,7 +134,6 @@ public class Global {
     @Nullable public DBHandler getDBHandler(){
         return dbHandler;
     }
-    private boolean browserTryAgain = false;
     @SuppressLint("SetJavaScriptEnabled")
     public WebView initBrowser(WebView view, ProgressBar progressBar, ImageView iconView, EditText addressBar, LinearLayout errorView, SwipeRefreshLayout swipe){
         if(view.getVisibility() == WebView.GONE) {

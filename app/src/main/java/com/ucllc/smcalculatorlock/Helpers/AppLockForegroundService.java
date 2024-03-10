@@ -32,7 +32,6 @@ public class AppLockForegroundService extends Service {
 
     private UsageStatsManager usageStatsManager;
     private String lastForegroundApp;
-
     private static final int NOTIFICATION_ID = 1;
     private static final String CHANNEL_ID = "AppLockServiceChannel";
 
@@ -138,5 +137,10 @@ public class AppLockForegroundService extends Service {
                 .setContentText("Monitoring app usage")
                 .setSmallIcon(R.mipmap.ic_launcher_round);
         return builder.build();
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
     }
 }

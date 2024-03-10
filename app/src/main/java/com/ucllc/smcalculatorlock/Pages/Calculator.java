@@ -15,6 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ucllc.smcalculatorlock.CalculatorPages.CalculatorHistory;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Custom.Global;
+import com.ucllc.smcalculatorlock.Custom.LockCheckSchedule;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Helpers.AdLoader;
 import com.ucllc.smcalculatorlock.Helpers.AppLockForegroundService;
@@ -39,15 +40,12 @@ public class Calculator extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Global.logError(new Exception(new Global(this, this).encrypt("https://facebook.com/immo2n")));
-
+        dbHandler = new DBHandler(this);
+        new AdLoader(Calculator.this, Calculator.this, AdLoader::loadInterstitialAd);
 
         Intent serviceIntent = new Intent(this, AppLockForegroundService.class);
         startService(serviceIntent);
-
-        dbHandler = new DBHandler(this);
-        new AdLoader(Calculator.this, Calculator.this, AdLoader::loadInterstitialAd);
+        LockCheckSchedule.scheduleAlarms(this);
 
         /*SETUP CHECK STARTS*/
         if(dbHandler.getStateValue(StateKeys.SETUP) == null){

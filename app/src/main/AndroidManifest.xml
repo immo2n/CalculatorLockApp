@@ -64,7 +64,7 @@
             android:name=".Helpers.AppLockForegroundService"
             android:exported="false"
             tools:ignore="ForegroundServicePermission" />
-
+        <receiver android:name=".Custom.LockScheduleReceiver" />
         <receiver
             android:name=".Helpers.BootCompletedReceiver"
             android:exported="true">

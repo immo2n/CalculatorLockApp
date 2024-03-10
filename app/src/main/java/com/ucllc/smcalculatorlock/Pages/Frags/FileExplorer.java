@@ -87,7 +87,7 @@ public class FileExplorer extends Fragment {
         };
         //Locker Logic
         binding.lockerText.setOnClickListener(view -> {
-            if(lockableFiles.size() == 0) return;
+            if(lockableFiles.size() == 0 || !isAdded()) return;
             AlertDialog.Builder Dbuilder = new AlertDialog.Builder(this.requireContext());
             Dbuilder.setMessage("Locking...");
             Dbuilder.setTitle("Please wait");
@@ -96,6 +96,7 @@ public class FileExplorer extends Fragment {
             DDialog.show();
             new Thread(() -> {
                 int c = locker.lockFiles(new ArrayList<>(lockableFiles.keySet()));
+                if(!isAdded()) return;
                 requireActivity().runOnUiThread(() -> {
                     if(null == dbHandler.getStateValue(StateKeys.DATA_LOSS_WARNING)){
                         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
@@ -120,6 +121,7 @@ public class FileExplorer extends Fragment {
             @Override
             public void onPathChanged(String path, boolean storeHistory) {
                 filesLoaded();
+                if(!isAdded()) return;
                 if(storeHistory) pathHistory.push(path);
                 binding.path.setText(((path.equals(Environment.getExternalStorageDirectory().getPath())) ? "Internal Storage" : path)
                         .replace(Environment.getExternalStorageDirectory().getPath(), "Internal Storage"));

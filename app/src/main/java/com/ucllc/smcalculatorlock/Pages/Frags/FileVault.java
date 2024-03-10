@@ -134,7 +134,7 @@ public class FileVault extends Fragment {
         binding.emptyVault.setVisibility(View.GONE);
         binding.loading.setVisibility(View.VISIBLE);
         tabThread = new Thread(() -> {
-            if(Home.currentTabIndex != 0) return;
+            if(Home.currentTabIndex != 0 || !isAdded()) return;
             List<LockedFile> lockedFiles = dbHandler.getLockedFiles();
             requireActivity().runOnUiThread(() -> {
                 binding.vaultView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -142,7 +142,7 @@ public class FileVault extends Fragment {
                         lockedFiles, requireActivity(), requireContext(), fileSelectedCallback
                 ));
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    if(Home.currentTabIndex != 0) return;
+                    if(Home.currentTabIndex != 0 || !isAdded()) return;
                     binding.loading.setVisibility(View.GONE);
                     if(lockedFiles.size() == 0){
                         binding.vaultView.setVisibility(View.GONE);
@@ -177,6 +177,7 @@ public class FileVault extends Fragment {
         }
         new Thread(() -> {
             List<LockedFile> lockedFiles = dbHandler.getLockedFiles();
+            if(!isAdded()) return;
             requireActivity().runOnUiThread(() -> {
                 if(lockedFiles.size() == 0){
                     binding.vaultView.setVisibility(View.GONE);

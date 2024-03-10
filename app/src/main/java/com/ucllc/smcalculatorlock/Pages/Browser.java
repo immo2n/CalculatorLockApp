@@ -94,6 +94,7 @@ public class Browser extends AppCompatActivity {
             browser.reload();
         });
 
+
         binding.urlIcon.setOnClickListener(view -> {
             final Dialog dialog = new Dialog(Browser.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -108,8 +109,14 @@ public class Browser extends AppCompatActivity {
         binding.home.setOnClickListener(view -> {
             browser.clearCache(true);
             browser.clearHistory();
-            binding.error.setVisibility(View.GONE);
-            binding.swipe.setVisibility(View.VISIBLE);
+            browser.clearFormData();
+            browser.clearMatches();
+            browser.clearSslPreferences();
+            browser.clearDisappearingChildren();
+            browser.clearFocus();
+            browser.clearAnimation();
+            browser.clearMatches();
+            global.browserTryAgain = true;
             browser.loadUrl(Objects.requireNonNull(global.decrypt(Config.BROWSER_VALIDATOR)));
             //Clear focus and hide keyboard
             binding.urlInput.clearFocus();
