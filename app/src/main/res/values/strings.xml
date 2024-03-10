@@ -89,4 +89,6 @@
     <string name="lock_files">Lock files</string>
     <string name="unlock_files">Unlock files</string>
     <string name="untitled">Untitled</string>
+    <string name="file_vault">File vault</string>
+    <string name="goto_explorer_to_add_files_to_vault">Goto \'Explorer\' to add files to vault.</string>
 </resources>

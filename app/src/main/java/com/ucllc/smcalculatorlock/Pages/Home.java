@@ -26,10 +26,13 @@ import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.databinding.ActivityHomeBinding;
 
 public class Home extends AppCompatActivity {
-    public interface OnFragmentBack {
+    public interface onFragmentControl {
         void onBack();
+        void onNeedReload();
     }
-    public static OnFragmentBack onFragmentBack = null;
+    public static onFragmentControl fragmentControlExplorer = null,
+            fragmentControlApps = null,
+            fragmentControlVault = null;
     ActivityHomeBinding binding;
     private Global global;
     public static boolean appLockPermissionCheck = false;
@@ -46,18 +49,18 @@ public class Home extends AppCompatActivity {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if(onFragmentBack == null){
+                if(fragmentControlExplorer == null){
                     finish();
                 }
                 else {
-                    onFragmentBack.onBack();
+                    fragmentControlExplorer.onBack();
                 }
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
 
         //Tab adapter
-        HomeFragmentAdapter adapter = new HomeFragmentAdapter(this, this::finish);
+        HomeFragmentAdapter adapter = new HomeFragmentAdapter(this);
         binding.homePager.setAdapter(adapter);
         binding.homePager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -84,17 +87,20 @@ public class Home extends AppCompatActivity {
                             (2 == position) ? R.color.white : R.color.off_white
                     ));
                     YoYo.with(Techniques.ZoomIn).duration(120).playOn(binding.homePager);
-                    switch (position){
-                        case 0:
-                            binding.pageTitle.setText(getString(R.string.vault));
-                            break;
-                        case 1:
-                            binding.pageTitle.setText(getString(R.string.apps));
-                            break;
-                        case 2:
-                            binding.pageTitle.setText(getString(R.string.explorer));
-                            break;
-                    }
+                }
+                switch (position){
+                    case 0:
+                        if(null != fragmentControlVault) fragmentControlVault.onNeedReload();
+                        binding.pageTitle.setText(getString(R.string.vault));
+                        break;
+                    case 1:
+                        if(null != fragmentControlApps) fragmentControlApps.onNeedReload();
+                        binding.pageTitle.setText(getString(R.string.apps));
+                        break;
+                    case 2:
+                        if(null != fragmentControlExplorer) fragmentControlExplorer.onNeedReload();
+                        binding.pageTitle.setText(getString(R.string.explorer));
+                        break;
                 }
             }
         });
@@ -116,18 +122,9 @@ public class Home extends AppCompatActivity {
             });
         }
         binding.key.setOnClickListener(v-> dialog.show());
-        binding.tabVault.setOnClickListener(v-> {
-            Home.onFragmentBack = null;
-            binding.homePager.setCurrentItem(0, false);
-        });
-        binding.tabApps.setOnClickListener(v-> {
-            Home.onFragmentBack = null;
-            binding.homePager.setCurrentItem(1, false);
-        });
-        binding.tabFiles.setOnClickListener(v-> {
-            Home.onFragmentBack = null;
-            binding.homePager.setCurrentItem(2, false);
-        });
+        binding.tabVault.setOnClickListener(v-> binding.homePager.setCurrentItem(0, false));
+        binding.tabApps.setOnClickListener(v-> binding.homePager.setCurrentItem(1, false));
+        binding.tabFiles.setOnClickListener(v-> binding.homePager.setCurrentItem(2, false));
         binding.homePager.setUserInputEnabled(false);
         binding.browser.setOnClickListener(view -> startActivity(new Intent(Home.this, Browser.class)));
     }

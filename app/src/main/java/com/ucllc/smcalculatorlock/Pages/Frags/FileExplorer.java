@@ -1,15 +1,14 @@
 package com.ucllc.smcalculatorlock.Pages.Frags;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,8 +54,6 @@ public class FileExplorer extends Fragment {
     public interface OnFileSelectedCallback {
         void onSelect(File file, CheckBox checkBox);
     }
-    public FileExplorer(HomeFragmentAdapter.UserActionEvents actionEvents) {
-    }
     Explorer explorer;
     Stack<String> pathHistory = new Stack<>();
     private FragExplorerBinding binding;
@@ -77,12 +74,26 @@ public class FileExplorer extends Fragment {
         explorer = new Explorer(requireContext(), requireActivity());
         dbHandler = new DBHandler(requireContext());
         locker = new Locker(new Global(requireContext(), requireActivity()));
-
-        Home.onFragmentBack = () -> binding.back.performClick();
+        Home.fragmentControlExplorer = new Home.onFragmentControl() {
+            @Override
+            public void onBack() {
+                if(Home.currentTabIndex != 2) return;
+                binding.back.performClick();
+            }
+            @Override
+            public void onNeedReload() {
+                //Do nothing
+            }
+        };
         //Locker Logic
         binding.lockerText.setOnClickListener(view -> {
             if(lockableFiles.size() == 0) return;
-            Toast.makeText(requireContext(), "Locking...", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder Dbuilder = new AlertDialog.Builder(this.requireContext());
+            Dbuilder.setMessage("Locking...");
+            Dbuilder.setTitle("Please wait");
+            Dbuilder.setCancelable(false);
+            AlertDialog DDialog = Dbuilder.create();
+            DDialog.show();
             new Thread(() -> {
                 int c = locker.lockFiles(new ArrayList<>(lockableFiles.keySet()));
                 requireActivity().runOnUiThread(() -> {
@@ -96,6 +107,7 @@ public class FileExplorer extends Fragment {
                                 .show();
                     }
                     Toast.makeText(requireContext(), c + " files locked", Toast.LENGTH_SHORT).show();
+                    DDialog.dismiss();
                     lockableFiles = new HashMap<>();
                     lockerUIChange();
                     loadPath(currentPath);
@@ -143,7 +155,7 @@ public class FileExplorer extends Fragment {
                     loadPath(Environment.getExternalStorageDirectory().getPath());
                 }
             } else {
-                Home.onFragmentBack = null;
+                Home.fragmentControlExplorer = null;
                 Toast.makeText(requireContext(), "Storage home", Toast.LENGTH_SHORT).show();
             }
         });
@@ -274,7 +286,7 @@ public class FileExplorer extends Fragment {
             }
         }
         if(c > 0){
-            binding.lockerText.setText(String.format("%s (%d)", requireActivity().getString(R.string.lock_files), lockableFiles.size()));
+            binding.lockerText.setText(String.format("%s (%d)", requireActivity().getString(R.string.lock_files), c));
         }
         if(c == 0){
             YoYo.with(Techniques.SlideOutDown).duration(300).playOn(binding.lockerButton);

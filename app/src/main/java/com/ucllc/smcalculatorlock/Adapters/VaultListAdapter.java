@@ -65,6 +65,7 @@ public class VaultListAdapter extends RecyclerView.Adapter<VaultListAdapter.View
 
         holder.selectionSwitch.setChecked(FileVault.unlockMap.containsKey(item));
         holder.selectionSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(FileVault.unlockMapLocked) return;
             if(isChecked){
                 FileVault.unlockMap.put(item, holder.selectionSwitch);
             } else {

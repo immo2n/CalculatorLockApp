@@ -11,13 +11,8 @@ import com.ucllc.smcalculatorlock.Pages.Frags.FileVault;
 import com.ucllc.smcalculatorlock.Pages.Home;
 
 public class HomeFragmentAdapter extends FragmentStateAdapter {
-    public interface UserActionEvents {
-        void onCloseUiSignal();
-    }
-    private final UserActionEvents actionEvents;
-    public HomeFragmentAdapter(@NonNull FragmentActivity fragmentActivity, UserActionEvents actionEvents){
+    public HomeFragmentAdapter(@NonNull FragmentActivity fragmentActivity){
         super(fragmentActivity);
-        this.actionEvents = actionEvents;
     }
 
     @NonNull
@@ -29,7 +24,7 @@ public class HomeFragmentAdapter extends FragmentStateAdapter {
             case 1:
                 return new AppLock();
             case 2:
-                return new FileExplorer(actionEvents);
+                return new FileExplorer();
         }
         return new FileVault();
     }

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.ucllc.smcalculatorlock.DataClasses.LockedFile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
@@ -109,6 +110,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 } while (cursor.moveToNext());
             }
             cursor.close();
+            Collections.reverse(list);
             return list;
         }
         catch (Exception e){
@@ -124,9 +126,9 @@ public class DBHandler extends SQLiteOpenHelper {
             Cursor cursor = db.rawQuery("SELECT * FROM " + LOCKED_FILES_TABLE + " WHERE " + LOCKED_FILES_HASH + " = ?", new String[]{hash});
             if (cursor.moveToFirst()) {
                 result = new LockedFile(
-                        cursor.getString(0),
                         cursor.getString(1),
                         cursor.getString(2),
+                        cursor.getString(4),
                         cursor.getString(3)
                 );
             }

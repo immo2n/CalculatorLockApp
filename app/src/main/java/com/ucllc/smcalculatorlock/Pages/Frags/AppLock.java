@@ -34,22 +34,28 @@ import java.util.List;
 
 public class AppLock extends Fragment {
     private ActivityResultLauncher<Intent> accessibilityServiceLauncher;
+    private FragApplockBinding binding;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragApplockBinding binding = FragApplockBinding.inflate(inflater);
+        binding = FragApplockBinding.inflate(inflater);
 
-        new Thread(() -> {
-            List<AppListHelper.AppInfo> apps = AppListHelper.getInstalledApps(requireContext());
-            if(Home.currentTabIndex != 1) return;
-            requireActivity().runOnUiThread(() -> {
-                binding.mainView.setLayoutManager(new LinearLayoutManager(requireContext()));
-                binding.mainView.setAdapter(new AppListAdapter(apps, requireContext()));
-                binding.loading.setVisibility(View.GONE);
-                binding.mainView.setVisibility(View.VISIBLE);
-                checkPermissions();
-            });
-        }).start();
+        Home.fragmentControlApps = new Home.onFragmentControl() {
+            @Override
+            public void onBack() {
+                //Do nothing
+            }
+
+            @Override
+            public void onNeedReload() {
+                if(Home.currentTabIndex != 1) return;
+                binding.mainView.setVisibility(View.GONE);
+                binding.loading.setVisibility(View.VISIBLE);
+                loadApps();
+            }
+        };
+
+        loadApps();
 
         accessibilityServiceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
@@ -62,6 +68,20 @@ public class AppLock extends Fragment {
             }
         });
         return binding.getRoot();
+    }
+
+    private void loadApps() {
+        new Thread(() -> {
+            List<AppListHelper.AppInfo> apps = AppListHelper.getInstalledApps(requireContext());
+            if(Home.currentTabIndex != 1) return;
+            requireActivity().runOnUiThread(() -> {
+                binding.mainView.setLayoutManager(new LinearLayoutManager(requireContext()));
+                binding.mainView.setAdapter(new AppListAdapter(apps, requireContext()));
+                binding.loading.setVisibility(View.GONE);
+                binding.mainView.setVisibility(View.VISIBLE);
+                checkPermissions();
+            });
+        }).start();
     }
 
     private void checkPermissions() {

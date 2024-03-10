@@ -2,6 +2,7 @@ package com.ucllc.smcalculatorlock.Custom;
 
 import android.app.Activity;
 import android.os.Environment;
+import android.widget.Toast;
 
 import com.ucllc.smcalculatorlock.DataClasses.LockedFile;
 
@@ -33,7 +34,7 @@ public class Locker {
             }
         }
         for(File file : files){
-            if(file.exists()){
+            if(file.exists() && file.isFile()){
                 String hash = Global.md5(file.getAbsolutePath());
                 if(null != hash){
                     LockedFile lockedFile = new LockedFile(
@@ -70,10 +71,35 @@ public class Locker {
         LockedFile target = dbHandler.getFileByHash(hash);
         if(null != target){
             File file = new File(lockedSource, hash);
-            if(file.exists()) return file.renameTo(new File(target.getSourcePath()));
+            if(file.exists()) {
+                File internalStorage = new File(Environment.getExternalStorageDirectory(), "Calculator Vault");
+                if(!internalStorage.exists()){
+                    if(!internalStorage.mkdirs()){
+                        activity.runOnUiThread(()-> Toast.makeText(activity, "Can't create internal storage directory! Check permissions!", Toast.LENGTH_LONG).show());
+                        return false;
+                    }
+                }
+                return moveFile(file, getSafeFileName(new File(internalStorage, target.getFileName())));
+            }
         }
         return false;
     }
+
+    private File getSafeFileName(File file) {
+        if(file.exists()){
+            String name = file.getName();
+            String[] split = name.split("\\.");
+            String ext = split[split.length - 1];
+            String base = name.substring(0, name.length() - ext.length() - 1);
+            int i = 1;
+            while(file.exists()){
+                file = new File(file.getParent(), base + "(" + i + ")." + ext);
+                i++;
+            }
+        }
+        return file;
+    }
+
     private boolean moveFile(File sourceFile, File destFile) {
         try {
             FileInputStream inStream = new FileInputStream(sourceFile);

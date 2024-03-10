@@ -12,6 +12,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/emptyVault"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.airbnb.lottie.LottieAnimationView
+            android:scaleX="2"
+            android:scaleY="2"
+            android:id="@+id/lottieAnimationView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="anim_vault.json"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/lottieAnimationView"
+            android:id="@+id/title"
+            android:textAlignment="center"
+            android:fontFamily="@font/trebuc"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:text="@string/file_vault"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginTop="7dp"
+            android:layout_below="@id/title"
+            android:textAlignment="center"
+            android:fontFamily="@font/trebuc"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:text="@string/goto_explorer_to_add_files_to_vault"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
     <LinearLayout
         android:visibility="gone"
         android:id="@+id/unlockButton"

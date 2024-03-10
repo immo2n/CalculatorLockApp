@@ -200,21 +200,8 @@ public class Explorer {
             case "png":
             case "gif":
             case "bmp":
-            case "webp":
-            case "svg":
             case "tiff":
-            case "ico":
-            case "psd":
-            case "ai":
-            case "eps":
             case "raw":
-            case "cr2":
-            case "orf":
-            case "nef":
-            case "sr2":
-            case "rw2":
-            case "arw":
-            case "dng":
                 return FileType.IMAGE;
             case "mp4":
             case "avi":
