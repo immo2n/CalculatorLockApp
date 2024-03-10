@@ -3,7 +3,10 @@ package com.ucllc.smcalculatorlock.Adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +29,7 @@ import com.ucllc.smcalculatorlock.Custom.Global;
 import com.ucllc.smcalculatorlock.Interfaces.ExplorerUI;
 import com.ucllc.smcalculatorlock.Interfaces.FilesInPathCallback;
 import com.ucllc.smcalculatorlock.Pages.Frags.FileExplorer;
+import com.ucllc.smcalculatorlock.Pages.Home;
 import com.ucllc.smcalculatorlock.R;
 
 import java.io.File;
@@ -52,10 +57,22 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
     @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        //Reset
         File file = fileList.get(position);
-        holder.name.setText(file.getName());
         holder.icon.setImageDrawable(FileExplorer.getFileIcon(fileList.get(position), holder.icon.getContext()));
+        holder.name.setTextColor(ContextCompat.getColor(holder.name.getContext(), R.color.white));
+        SpannableString spanString = new SpannableString(file.getName());
+        spanString.setSpan(new StyleSpan(Typeface.NORMAL), 0, spanString.length(), 0);
+        holder.name.setText(spanString);
+
         if(file.isDirectory()){
+            if(file.getName().equals("Calculator Vault")){
+                holder.name.setTextColor(ContextCompat.getColor(holder.name.getContext(), R.color.green));
+                holder.icon.setImageResource(R.mipmap.ic_launcher);
+                SpannableString spanStringInner = new SpannableString(file.getName());
+                spanStringInner.setSpan(new StyleSpan(Typeface.BOLD), 0, spanStringInner.length(), 0);
+                holder.name.setText(spanStringInner);
+            }
             holder.icon.setPadding(10, 10, 10, 10);
             File[] files = file.listFiles();
             if (files != null) {
@@ -87,6 +104,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
         }
         //CLICK EVENT
         holder.itemView.setOnClickListener(v -> {
+            Home.loadAdOnHome.loadAd();
             if (file.isDirectory()) {
                 explorer.explore(file.getPath(), FileExplorer.sortMode, FileExplorer.showHiddenFiles, new FilesInPathCallback() {
                     @SuppressLint("NotifyDataSetChanged")

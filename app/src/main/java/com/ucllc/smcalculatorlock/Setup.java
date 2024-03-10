@@ -38,7 +38,10 @@ public class Setup extends AppCompatActivity {
         dbHandler = new DBHandler(this);
 
         //Hooks
-        binding.dontAgree.setOnClickListener(v-> finish());
+        binding.dontAgree.setOnClickListener(v -> {
+            finish();
+            System.exit(0);
+        });
         binding.continueButton.setOnClickListener(v-> {
             if(permissionCheck){
                 completeSetup();

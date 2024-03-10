@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Helpers.AppListHelper;
+import com.ucllc.smcalculatorlock.Pages.Home;
 import com.ucllc.smcalculatorlock.R;
 
 import java.util.List;
@@ -60,6 +61,7 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.ViewHold
         holder.lockSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked) dbHandler.addLockedApp(item.getPackageName());
             else dbHandler.removeLockedApp(item.getPackageName());
+            Home.loadAdOnHome.loadAd();
         });
     }
 

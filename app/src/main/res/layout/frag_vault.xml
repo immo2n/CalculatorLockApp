@@ -5,7 +5,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/midnight_black">
 
+    <LinearLayout
+        android:id="@+id/loading"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_marginEnd="5dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+        <TextView
+            android:textSize="15sp"
+            android:fontFamily="@font/trebuc"
+            android:textColor="@color/off_white"
+            android:text="@string/loading_vault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
         android:id="@+id/vaultView"
         android:gravity="center"
         android:textColor="@color/white"

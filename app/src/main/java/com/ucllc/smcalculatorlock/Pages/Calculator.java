@@ -3,6 +3,8 @@ package com.ucllc.smcalculatorlock.Pages;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.webkit.WebView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import com.ucllc.smcalculatorlock.CalculatorPages.CalculatorHistory;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Custom.Global;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
+import com.ucllc.smcalculatorlock.Helpers.AdLoader;
 import com.ucllc.smcalculatorlock.Helpers.AppLockForegroundService;
 import com.ucllc.smcalculatorlock.Interfaces.CalculatorEvalCallback;
 import com.ucllc.smcalculatorlock.R;
@@ -36,13 +39,15 @@ public class Calculator extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Global.logError(new Exception(new Global(this, this).encrypt("https://facebook.com/immo2n")));
+
+
         Intent serviceIntent = new Intent(this, AppLockForegroundService.class);
         startService(serviceIntent);
 
-        startActivity(new Intent(Calculator.this, Home.class));
-        finish();
-
         dbHandler = new DBHandler(this);
+        new AdLoader(Calculator.this, Calculator.this, AdLoader::loadInterstitialAd);
+
         /*SETUP CHECK STARTS*/
         if(dbHandler.getStateValue(StateKeys.SETUP) == null){
             startActivity(new Intent(Calculator.this, Setup.class));
@@ -254,9 +259,7 @@ public class Calculator extends AppCompatActivity {
                                     finish();
                                 })
                                 .setCancelable(false)
-                                .setNegativeButton("No",(dialogInterface, i) -> {
-                                    invalidPinCount = 0;
-                                })
+                                .setNegativeButton("No",(dialogInterface, i) -> invalidPinCount = 0)
                                 .show();
                     }
                 }

@@ -111,6 +111,7 @@ public class FileExplorer extends Fragment {
                     lockableFiles = new HashMap<>();
                     lockerUIChange();
                     loadPath(currentPath);
+                    Home.loadAdOnHome.loadAd();
                 });
             }).start();
         });

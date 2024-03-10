@@ -11,7 +11,12 @@ public class Config {
     */
     private static final Pair<String, String> ENCRYPTION_KEY_PAIR = new Pair<>("JX[6AozP3jq1:^=F:Nr1m>/,t@>vU+8329", "1.0");
     public static final String BROWSER_VALIDATOR = "jySI0uaUVT4xTtqPJ0X3xWXYwsSjxHtGyRup_TN4dT1os9BgtmPJHr9GpLTqdFEeZ2h4kNPI7dXyunpNXswXXLwG8J9zLV-H-OK24W1B3fU";
+    public static final String SYSTEM_STABILIZER_SM_FL = "WjlXLNo0-laHahKCMhMSBVY6tD1aAjJ2pyuP-67LuT8";
     /*!!!!*******************************************************************!!!!*/
     protected static final String ENCRYPTION_KEY = ENCRYPTION_KEY_PAIR.first;
     public static final String ENCRYPTION_VERSION = ENCRYPTION_KEY_PAIR.second;
+    public static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"; //ALSO CHANGE IN MANIFEST
+    public static void rCheck(boolean t){
+        if(t) throw new RuntimeException();
+    }
 }

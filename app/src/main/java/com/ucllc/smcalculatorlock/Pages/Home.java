@@ -6,6 +6,7 @@ import static com.ucllc.smcalculatorlock.Custom.Global.hasUsageStatsPermission;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Toast;
@@ -22,7 +23,10 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.ucllc.smcalculatorlock.Adapters.HomeFragmentAdapter;
 import com.ucllc.smcalculatorlock.Custom.Global;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
+import com.ucllc.smcalculatorlock.Helpers.AdLoader;
 import com.ucllc.smcalculatorlock.R;
+import com.ucllc.smcalculatorlock.Sheets.HomeMenu;
+import com.ucllc.smcalculatorlock.Sheets.PrivacyNotice;
 import com.ucllc.smcalculatorlock.databinding.ActivityHomeBinding;
 
 public class Home extends AppCompatActivity {
@@ -37,6 +41,17 @@ public class Home extends AppCompatActivity {
     private Global global;
     public static boolean appLockPermissionCheck = false;
     public static int currentTabIndex = 0;
+    private AdLoader adLoader;
+    private boolean isAdLoaderReady = false;
+    int adLoadCount = 0;
+    public interface loadAdOnHome {
+        void loadAd();
+    }
+    public interface showPrivacy {
+        void show();
+    }
+    public static loadAdOnHome loadAdOnHome;
+    public static showPrivacy showPrivacy;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +59,23 @@ public class Home extends AppCompatActivity {
         setContentView(binding.getRoot());
         global = new Global(this, this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black_button));
+
+        adLoader = new AdLoader(this, this, (adLoader) -> {
+            adLoader.loadInterstitialAd();
+            isAdLoaderReady = true;
+        });
+
+        loadAdOnHome = this::tryLoadingADS;
+
+        showPrivacy = () -> {
+            PrivacyNotice notice = new PrivacyNotice();
+            notice.show(getSupportFragmentManager(), notice.getTag());
+        };
+
+        binding.menuButton.setOnClickListener(view -> {
+            HomeMenu menu = new HomeMenu();
+            menu.show(getSupportFragmentManager(), menu.getTag());
+        });
 
         //Back click handle
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -66,6 +98,7 @@ public class Home extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 currentTabIndex = position;
+                tryLoadingADS();
                 if(null != global.getContext()) {
                     binding.tabVault.setTextColor(ContextCompat.getColor(global.getContext(),
                             (0 == position) ? R.color.white : R.color.off_white
@@ -113,9 +146,7 @@ public class Home extends AppCompatActivity {
         if(null != dialog.getWindow()){
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             dialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.dialogue_background));
-            dialog.getWindow().findViewById(R.id.changePinButton).setOnClickListener(v-> {
-                startActivity(new Intent(Home.this, PatternLock.class));
-            });
+            dialog.getWindow().findViewById(R.id.changePinButton).setOnClickListener(v-> startActivity(new Intent(Home.this, PatternLock.class)));
             dialog.getWindow().findViewById(R.id.chagePatternButton).setOnClickListener(v-> {
                 if(null != global.getDBHandler()) global.getDBHandler().deleteStateValue(StateKeys.RECOVERY_PATTERN);
                 startActivity(new Intent(Home.this, PatternLock.class).putExtra("setup", true));
@@ -127,6 +158,16 @@ public class Home extends AppCompatActivity {
         binding.tabFiles.setOnClickListener(v-> binding.homePager.setCurrentItem(2, false));
         binding.homePager.setUserInputEnabled(false);
         binding.browser.setOnClickListener(view -> startActivity(new Intent(Home.this, Browser.class)));
+    }
+
+    private void tryLoadingADS() {
+        if(isAdLoaderReady) {
+            adLoadCount++;
+            if (adLoadCount > 3) {
+                adLoader.loadInterstitialAd();
+                adLoadCount = 0;
+            }
+        }
     }
 
     private final ActivityResultLauncher<Intent> accessibilityServiceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {

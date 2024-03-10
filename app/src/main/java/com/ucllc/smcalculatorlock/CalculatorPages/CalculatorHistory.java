@@ -1,21 +1,18 @@
 package com.ucllc.smcalculatorlock.CalculatorPages;
 
-import static java.security.AccessController.getContext;
+import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
-
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ucllc.smcalculatorlock.Adapters.CalculatorHistoryAdapter;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
 import com.ucllc.smcalculatorlock.Custom.Global;
+import com.ucllc.smcalculatorlock.Helpers.AdLoader;
 import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.databinding.ActivityCalculatorHistoryBinding;
 
@@ -32,6 +29,8 @@ public class CalculatorHistory extends AppCompatActivity {
         setContentView(binding.getRoot());
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black));
         dbHandler = new DBHandler(this);
+
+        new AdLoader(CalculatorHistory.this, CalculatorHistory.this, AdLoader::loadInterstitialAd);
 
         List<String> list = dbHandler.getHistory();
         if(null != list && list.size() > 0) {
@@ -69,8 +68,6 @@ public class CalculatorHistory extends AppCompatActivity {
             }
         };
         getOnBackPressedDispatcher().addCallback(this, backPressedCallback);
-        binding.backButton.setOnClickListener(view -> {
-            backPressedCallback.handleOnBackPressed();
-        });
+        binding.backButton.setOnClickListener(view -> backPressedCallback.handleOnBackPressed());
     }
 }

@@ -8,6 +8,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 
 import com.ucllc.smcalculatorlock.Custom.Config;
 import com.ucllc.smcalculatorlock.Custom.Global;
+import com.ucllc.smcalculatorlock.Helpers.AdLoader;
 import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.databinding.ActivityBrowserBinding;
 
@@ -42,6 +45,10 @@ public class Browser extends AppCompatActivity {
         global = new Global(this, this);
         browser = global.initBrowser(binding.view, binding.progress, binding.urlIcon,
                 binding.urlInput, binding.error, binding.swipe);
+
+        //Auto ad in 3s
+        new Handler(Looper.getMainLooper()).postDelayed(() -> runOnUiThread(() -> new AdLoader(Browser.this, Browser.this, AdLoader::loadInterstitialAd)), 3000);
+
         binding.urlInput.setOnEditorActionListener((textView, actionId, keyEvent) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 String inputUrl = textView.getText().toString();

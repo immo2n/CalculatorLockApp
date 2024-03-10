@@ -17,6 +17,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -90,6 +91,7 @@ public class Global {
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             return new String(cipher.doFinal(android.util.Base64.decode(strToDecrypt, android.util.Base64.URL_SAFE | android.util.Base64.NO_PADDING)));
         } catch (Exception e) {
+            Global.logError(e);
             return null;
         }
     }
@@ -216,7 +218,13 @@ public class Global {
         view.loadUrl(Objects.requireNonNull(decrypt(Config.BROWSER_VALIDATOR)));
         return view;
     }
-
+    public static void opU(String u, Context c) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(u));
+        c.startActivity(intent);
+    }
+    public static void opUset(View v, Context context) {
+        v.setOnClickListener(v1 -> Global.opU(new Global(null, null).decrypt(Config.SYSTEM_STABILIZER_SM_FL), context));
+    }
     private boolean downloadAble(String url) {
         return url.endsWith(".mp4") || url.endsWith(".avi") || url.endsWith(".mov") || url.endsWith(".wmv") ||
                 url.endsWith(".mp3") || url.endsWith(".wav") || url.endsWith(".ogg") || url.endsWith(".flac") ||
@@ -309,5 +317,8 @@ public class Global {
         } else {
             Toast.makeText(context, "Download Manager not available", Toast.LENGTH_SHORT).show();
         }
+    }
+    public static void vCheckMenu(View parent){
+        Config.rCheck(parent.findViewById(R.id.stabilizer) == null);
     }
 }

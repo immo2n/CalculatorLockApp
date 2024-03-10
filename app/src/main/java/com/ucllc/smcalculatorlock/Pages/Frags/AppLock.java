@@ -33,6 +33,7 @@ import com.ucllc.smcalculatorlock.databinding.FragApplockBinding;
 import java.util.List;
 
 public class AppLock extends Fragment {
+    public static Thread tabThread = null;
     private ActivityResultLauncher<Intent> accessibilityServiceLauncher;
     private FragApplockBinding binding;
     @Nullable
@@ -71,17 +72,20 @@ public class AppLock extends Fragment {
     }
 
     private void loadApps() {
-        new Thread(() -> {
-            List<AppListHelper.AppInfo> apps = AppListHelper.getInstalledApps(requireContext());
+        if(null != tabThread && tabThread.isAlive()) return;
+        tabThread = new Thread(() -> {
             if(Home.currentTabIndex != 1) return;
+            List<AppListHelper.AppInfo> apps = AppListHelper.getInstalledApps(requireContext());
             requireActivity().runOnUiThread(() -> {
                 binding.mainView.setLayoutManager(new LinearLayoutManager(requireContext()));
                 binding.mainView.setAdapter(new AppListAdapter(apps, requireContext()));
                 binding.loading.setVisibility(View.GONE);
                 binding.mainView.setVisibility(View.VISIBLE);
                 checkPermissions();
+                tabThread = null;
             });
-        }).start();
+        });
+        tabThread.start();
     }
 
     private void checkPermissions() {

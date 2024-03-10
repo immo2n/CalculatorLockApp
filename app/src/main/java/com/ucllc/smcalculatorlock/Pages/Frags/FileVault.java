@@ -2,7 +2,6 @@ package com.ucllc.smcalculatorlock.Pages.Frags;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -33,7 +32,6 @@ import com.ucllc.smcalculatorlock.databinding.FragVaultBinding;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileVault extends Fragment {
     public interface OnFileSelectedCallback {
@@ -46,7 +44,7 @@ public class FileVault extends Fragment {
     private File lockerDestination;
     private DBHandler dbHandler;
     private OnFileSelectedCallback fileSelectedCallback;
-    int c = 0;
+    int totalUnlocked = 0;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -87,7 +85,7 @@ public class FileVault extends Fragment {
         });
         binding.lockerText.setOnClickListener(view -> {
             if(unlockMap.size() == 0) return;
-            c = 0;
+            totalUnlocked = 0;
             AlertDialog.Builder Dbuilder = new AlertDialog.Builder(this.requireContext());
             Dbuilder.setMessage("Unlocking...");
             Dbuilder.setTitle("Please wait");
@@ -99,7 +97,7 @@ public class FileVault extends Fragment {
                     File file = new File(lockerDestination, lockedFile.getHash());
                     if(file.exists()){
                         if(locker.unlockFile(lockedFile.getHash())){
-                            c++;
+                            totalUnlocked++;
                         }
                     }
                     dbHandler.removeLockedFile(lockedFile.getHash());
@@ -115,12 +113,13 @@ public class FileVault extends Fragment {
                                 .show();
                     }
                     DDialog.dismiss();
-                    Toast.makeText(requireContext(), c + " files unlocked", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), totalUnlocked + " files unlocked", Toast.LENGTH_SHORT).show();
                     unlockMap = new HashMap<>();
                     binding.vaultView.setAdapter(new VaultListAdapter(
                             dbHandler.getLockedFiles(), requireActivity(), requireContext(), fileSelectedCallback
                     ));
                     lockerUIChange();
+                    Home.loadAdOnHome.loadAd();
                 });
             }).start();
         });
@@ -128,20 +127,36 @@ public class FileVault extends Fragment {
         return binding.getRoot();
     }
 
+    public static Thread tabThread = null;
     private void loadFiles() {
-        List<LockedFile> lockedFiles = dbHandler.getLockedFiles();
-        binding.vaultView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.vaultView.setAdapter(new VaultListAdapter(
-                lockedFiles, requireActivity(), requireContext(), fileSelectedCallback
-        ));
-        if(lockedFiles.size() == 0){
-            binding.vaultView.setVisibility(View.GONE);
-            binding.emptyVault.setVisibility(View.VISIBLE);
-        }
-        else {
-            binding.vaultView.setVisibility(View.VISIBLE);
-            binding.emptyVault.setVisibility(View.GONE);
-        }
+        if(null != tabThread && tabThread.isAlive()) return;
+        binding.vaultView.setVisibility(View.GONE);
+        binding.emptyVault.setVisibility(View.GONE);
+        binding.loading.setVisibility(View.VISIBLE);
+        tabThread = new Thread(() -> {
+            if(Home.currentTabIndex != 0) return;
+            List<LockedFile> lockedFiles = dbHandler.getLockedFiles();
+            requireActivity().runOnUiThread(() -> {
+                binding.vaultView.setLayoutManager(new LinearLayoutManager(requireContext()));
+                binding.vaultView.setAdapter(new VaultListAdapter(
+                        lockedFiles, requireActivity(), requireContext(), fileSelectedCallback
+                ));
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    if(Home.currentTabIndex != 0) return;
+                    binding.loading.setVisibility(View.GONE);
+                    if(lockedFiles.size() == 0){
+                        binding.vaultView.setVisibility(View.GONE);
+                        binding.emptyVault.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        binding.vaultView.setVisibility(View.VISIBLE);
+                        binding.emptyVault.setVisibility(View.GONE);
+                    }
+                }, 300);
+            });
+            tabThread = null;
+        });
+        tabThread.start();
     }
 
     private boolean lockerShowing = false;
@@ -151,8 +166,6 @@ public class FileVault extends Fragment {
             binding.lockerText.setText(String.format("%s (%d)", requireActivity().getString(R.string.unlock_files), unlockMap.size()));
         }
         if(unlockMap.size() == 0){
-            binding.vaultView.setVisibility(View.GONE);
-            binding.emptyVault.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.SlideOutDown).duration(300).playOn(binding.unlockButton);
             YoYo.with(Techniques.ZoomOut).duration(300).playOn(binding.unlockButton);
             lockerShowing = false;
@@ -162,5 +175,18 @@ public class FileVault extends Fragment {
             YoYo.with(Techniques.SlideInUp).duration(300).playOn(binding.unlockButton);
             lockerShowing = true;
         }
+        new Thread(() -> {
+            List<LockedFile> lockedFiles = dbHandler.getLockedFiles();
+            requireActivity().runOnUiThread(() -> {
+                if(lockedFiles.size() == 0){
+                    binding.vaultView.setVisibility(View.GONE);
+                    binding.emptyVault.setVisibility(View.VISIBLE);
+                }
+                else {
+                    binding.vaultView.setVisibility(View.VISIBLE);
+                    binding.emptyVault.setVisibility(View.GONE);
+                }
+            });
+        }).start();
     }
 }
