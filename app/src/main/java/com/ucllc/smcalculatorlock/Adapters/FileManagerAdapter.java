@@ -67,7 +67,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
             }
         }
         else {
-            Explorer.FileType fileType = Explorer.fileType(file);
+            Explorer.FileType fileType = Explorer.fileType(file.getName());
             if(fileType == Explorer.FileType.IMAGE){
                 Picasso.get()
                         .load(file)
@@ -129,9 +129,15 @@ public class FileManagerAdapter extends RecyclerView.Adapter<FileManagerAdapter.
         holder.selectionSwitch.setOnCheckedChangeListener(null);
         if(file.isDirectory()){
             File[] list = file.listFiles();
-            if(null == list || list.length == 0){
-                holder.selectionSwitch.setEnabled(false);
-                return;
+            if(null != list) {
+                int actualFiles = 0;
+                for (File f : list) {
+                    if (f.isFile()) actualFiles++;
+                }
+                if (actualFiles == 0) {
+                    holder.selectionSwitch.setEnabled(false);
+                    return;
+                }
             }
         }
         holder.selectionSwitch.setEnabled(true);

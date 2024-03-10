@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.ucllc.smcalculatorlock.Pages.Frags.AppLock;
 import com.ucllc.smcalculatorlock.Pages.Frags.FileExplorer;
 import com.ucllc.smcalculatorlock.Pages.Frags.FileVault;
+import com.ucllc.smcalculatorlock.Pages.Home;
 
 public class HomeFragmentAdapter extends FragmentStateAdapter {
     public interface UserActionEvents {

@@ -3,11 +3,13 @@ package com.ucllc.smcalculatorlock.Pages.Frags;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ucllc.smcalculatorlock.Adapters.FileManagerAdapter;
 import com.ucllc.smcalculatorlock.Adapters.HomeFragmentAdapter;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
@@ -49,12 +52,10 @@ import java.util.Locale;
 import java.util.Stack;
 
 public class FileExplorer extends Fragment {
-    private final HomeFragmentAdapter.UserActionEvents actionEvents;
     public interface OnFileSelectedCallback {
         void onSelect(File file, CheckBox checkBox);
     }
     public FileExplorer(HomeFragmentAdapter.UserActionEvents actionEvents) {
-        this.actionEvents = actionEvents;
     }
     Explorer explorer;
     Stack<String> pathHistory = new Stack<>();
@@ -85,6 +86,15 @@ public class FileExplorer extends Fragment {
             new Thread(() -> {
                 int c = locker.lockFiles(new ArrayList<>(lockableFiles.keySet()));
                 requireActivity().runOnUiThread(() -> {
+                    if(null == dbHandler.getStateValue(StateKeys.DATA_LOSS_WARNING)){
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
+                        builder.setTitle("Read carefully")
+                                .setMessage("If you uninstall the app or, clear the app data or, delete the app data, all locked files will be lost. Please do not uninstall the app before unlocking all the files from the vault.")
+                                .setPositiveButton("OK, don't show again", (dialog, which) -> dbHandler.setAppState(StateKeys.DATA_LOSS_WARNING, StateKeys.VALUE_TRUE))
+                                .setNegativeButton("OK", (dialog, which) -> dialog.dismiss())
+                                .setCancelable(false)
+                                .show();
+                    }
                     Toast.makeText(requireContext(), c + " files locked", Toast.LENGTH_SHORT).show();
                     lockableFiles = new HashMap<>();
                     lockerUIChange();
@@ -92,7 +102,6 @@ public class FileExplorer extends Fragment {
                 });
             }).start();
         });
-
 
         explorerUI = new ExplorerUI() {
             @Override
@@ -134,7 +143,8 @@ public class FileExplorer extends Fragment {
                     loadPath(Environment.getExternalStorageDirectory().getPath());
                 }
             } else {
-                actionEvents.onCloseUiSignal();
+                Home.onFragmentBack = null;
+                Toast.makeText(requireContext(), "Storage home", Toast.LENGTH_SHORT).show();
             }
         });
         lockableFiles = new HashMap<>();
@@ -226,7 +236,9 @@ public class FileExplorer extends Fragment {
                 File[] files = file.listFiles();
                 if(files != null) {
                     for(File f : files) {
-                        processSelectedFile(f, null);
+                        if(f.isFile()) {
+                            processSelectedFile(f, null);
+                        }
                     }
                 }
                 lockableFiles.put(file, checkBox);
@@ -255,10 +267,16 @@ public class FileExplorer extends Fragment {
     private boolean lockerShowing = false;
     @SuppressLint("DefaultLocale")
     private void lockerUIChange(){
-        if(lockableFiles.size() > 0){
+        int c = 0;
+        for(File file : lockableFiles.keySet()){
+            if(!file.isDirectory()){
+                c++;
+            }
+        }
+        if(c > 0){
             binding.lockerText.setText(String.format("%s (%d)", requireActivity().getString(R.string.lock_files), lockableFiles.size()));
         }
-        if(lockableFiles.size() == 0){
+        if(c == 0){
             YoYo.with(Techniques.SlideOutDown).duration(300).playOn(binding.lockerButton);
             YoYo.with(Techniques.ZoomOut).duration(300).playOn(binding.lockerButton);
             lockerShowing = false;
@@ -431,5 +449,91 @@ public class FileExplorer extends Fragment {
         binding.explorerView.setVisibility(View.GONE);
         binding.loading.setVisibility(View.VISIBLE);
         binding.message.setText(R.string.failed_to_load);
+    }
+    public enum FileType {
+        IMAGE, VIDEO, AUDIO, DOCUMENT, OTHER
+    }
+    public static FileType getFileType(String fileName) {
+        switch (fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase()) {
+            case "jpg":
+            case "jpeg":
+            case "png":
+            case "gif":
+            case "bmp":
+            case "webp":
+            case "svg":
+            case "tiff":
+            case "ico":
+            case "psd":
+            case "ai":
+            case "eps":
+            case "raw":
+            case "cr2":
+            case "orf":
+            case "nef":
+            case "sr2":
+            case "rw2":
+            case "arw":
+            case "dng":
+                return FileType.IMAGE;
+            case "mp4":
+            case "avi":
+            case "mkv":
+            case "flv":
+            case "3gp":
+            case "mov":
+            case "wmv":
+            case "rm":
+            case "rmvb":
+            case "m4v":
+            case "webm":
+            case "mpeg":
+            case "mpg":
+            case "mpe":
+            case "m2v":
+            case "vob":
+            case "mts":
+            case "m2ts":
+            case "ts":
+                return FileType.VIDEO;
+            case "mp3":
+            case "wav":
+            case "flac":
+            case "ogg":
+            case "m4a":
+            case "aac":
+            case "wma":
+            case "aiff":
+            case "ape":
+            case "alac":
+            case "pcm":
+            case "dsd":
+            case "mid":
+            case "midi":
+            case "opus":
+            case "amr":
+                return FileType.AUDIO;
+            case "pdf":
+            case "doc":
+            case "docx":
+            case "xls":
+            case "xlsx":
+            case "ppt":
+            case "pptx":
+            case "txt":
+            case "rtf":
+            case "csv":
+            case "odt":
+            case "ods":
+            case "odp":
+            case "xml":
+            case "json":
+            case "html":
+            case "markdown":
+            case "tex":
+            case "log":
+                return FileType.DOCUMENT;
+        }
+        return FileType.OTHER;
     }
 }

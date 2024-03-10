@@ -93,17 +93,17 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public List<LockedFile> getLockedFiles(){
+        List<LockedFile> list = new ArrayList<>();
         try {
-            List<LockedFile> list = null;
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor cursor = db.rawQuery("SELECT * FROM " + LOCKED_FILES_TABLE, null);
             if (cursor.moveToFirst()) {
                 list = new ArrayList<>();
                 do {
                     list.add(new LockedFile(
-                            cursor.getString(0),
                             cursor.getString(1),
                             cursor.getString(2),
+                            cursor.getString(4),
                             cursor.getString(3)
                     ));
                 } while (cursor.moveToNext());
@@ -113,7 +113,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         catch (Exception e){
             Global.logError(e);
-            return null;
+            return list;
         }
     }
 
@@ -247,8 +247,8 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public List<String> getHistory(){
+        List<String> list = new ArrayList<>();
         try {
-            List<String> list = null;
             SQLiteDatabase db = this.getReadableDatabase();
             Cursor cursor = db.rawQuery("SELECT " + CALC_HISTORY_ENTRY + " FROM " + CALC_HISTORY_TABLE + " ORDER BY "+ COL_ID +" DESC", null);
             if (cursor.moveToFirst()) {
@@ -262,7 +262,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         catch (Exception e){
             Global.logError(e);
-            return null;
+            return list;
         }
     }
 

@@ -116,9 +116,18 @@ public class Home extends AppCompatActivity {
             });
         }
         binding.key.setOnClickListener(v-> dialog.show());
-        binding.tabVault.setOnClickListener(v-> binding.homePager.setCurrentItem(0, false));
-        binding.tabApps.setOnClickListener(v-> binding.homePager.setCurrentItem(1, false));
-        binding.tabFiles.setOnClickListener(v-> binding.homePager.setCurrentItem(2, false));
+        binding.tabVault.setOnClickListener(v-> {
+            Home.onFragmentBack = null;
+            binding.homePager.setCurrentItem(0, false);
+        });
+        binding.tabApps.setOnClickListener(v-> {
+            Home.onFragmentBack = null;
+            binding.homePager.setCurrentItem(1, false);
+        });
+        binding.tabFiles.setOnClickListener(v-> {
+            Home.onFragmentBack = null;
+            binding.homePager.setCurrentItem(2, false);
+        });
         binding.homePager.setUserInputEnabled(false);
         binding.browser.setOnClickListener(view -> startActivity(new Intent(Home.this, Browser.class)));
     }

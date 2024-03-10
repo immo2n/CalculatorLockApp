@@ -2,7 +2,7 @@
     <string name="app_name">SM Calculator Lock</string>
     <string name="ac">AC</string>
     <string name="fa_backspace"></string>
-    <string name="parcent">%</string>
+    <string name="percent">%</string>
     <string name="fa_divide"></string>
     <string name="_7">7</string>
     <string name="_8">8</string>
@@ -87,4 +87,6 @@
     <string name="no_information">No information</string>
     <string name="lock_icon">Lock icon</string>
     <string name="lock_files">Lock files</string>
+    <string name="unlock_files">Unlock files</string>
+    <string name="untitled">Untitled</string>
 </resources>
