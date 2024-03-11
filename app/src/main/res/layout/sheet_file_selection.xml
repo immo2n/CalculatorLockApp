@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@color/midnight_black"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:elevation="5dp"
+        android:background="@color/midnight_black_button"
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/explorerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="10dp"
+            android:src="@drawable/close"
+            android:contentDescription="@string/close" />
+
+        <TextView
+            android:layout_marginEnd="70dp"
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="middle"
+            android:fontFamily="@font/trebuc"
+            android:gravity="center|start"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:text="@string/select_files"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <Button
+            android:visibility="gone"
+            android:layout_marginStart="-90dp"
+            android:fontFamily="@font/trebuc"
+            android:textColor="@color/white"
+            android:id="@+id/lockButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:text="@string/lock"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
+        android:id="@+id/filesView"
+        android:nestedScrollingEnabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/loading"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_marginEnd="5dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+        <TextView
+            android:textSize="15sp"
+            android:fontFamily="@font/trebuc"
+            android:textColor="@color/off_white"
+            android:text="@string/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/empty"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:textSize="15sp"
+            android:fontFamily="@font/trebuc"
+            android:textColor="@color/off_white"
+            android:text="@string/empty_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>

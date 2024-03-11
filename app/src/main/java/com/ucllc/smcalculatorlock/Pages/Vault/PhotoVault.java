@@ -51,6 +51,13 @@ public class PhotoVault extends AppCompatActivity {
         binding.back.setOnClickListener(v -> finish());
         dbHandler = new DBHandler(this);
 
+        binding.addPhotos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         AdView adView = binding.vaultBannerAd;
         adView.setAdListener(new AdListener() {
             @Override

@@ -100,4 +100,6 @@
     <string name="all_files">All files</string>
     <string name="select_all">Select all</string>
     <string name="goto_explorer_to_add_files_to_vault_2">Goto \'Explorer\' to add files to vault.</string>
+    <string name="select_files">Select files</string>
+    <string name="lock">Lock</string>
 </resources>
