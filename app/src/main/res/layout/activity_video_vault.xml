@@ -172,4 +172,12 @@
             android:textSize="17sp" />
     </LinearLayout>
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/vaultBannerAd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-3940256099942544/9214589741"
+        app:layout_constraintBottom_toBottomOf="@+id/loading" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -91,7 +91,7 @@
     <string name="untitled">Untitled</string>
     <string name="file_vault">File vault</string>
     <string name="goto_explorer_to_add_files_to_vault">Goto \'Explorer\' or Add+ files to vault.</string>
-    <string name="loading_vault">Loading vault...</string>
+    <string name="loading_vault">Loading vault…</string>
     <string name="menu_icon">Menu icon</string>
     <string name="developed_amp_designed_by_unicore_softwares_llc"><![CDATA[Developed & Designed by UniCore Softwares LLC]]></string>
     <string name="photos">Photos</string>
@@ -99,4 +99,5 @@
     <string name="add">Add +</string>
     <string name="all_files">All files</string>
     <string name="select_all">Select all</string>
+    <string name="goto_explorer_to_add_files_to_vault_2">Goto \'Explorer\' to add files to vault.</string>
 </resources>

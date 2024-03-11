@@ -10,11 +10,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ucllc.smcalculatorlock.Adapters.VaultListAdapter;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
@@ -47,6 +51,21 @@ public class VideoVault extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black_button));
         binding.back.setOnClickListener(v -> finish());
         dbHandler = new DBHandler(this);
+
+        AdView adView = binding.vaultBannerAd;
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                if(null == adView.getAdSize()) return;
+                int adHeight = adView.getAdSize().getHeightInPixels(getApplicationContext());
+                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) binding.vaultView.getLayoutParams();
+                layoutParams.bottomMargin = adHeight;
+                binding.vaultView.setLayoutParams(layoutParams);
+            }
+        });
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
         FileVault.diableSelection = false;
         binding.selectAll.setOnClickListener(v -> {

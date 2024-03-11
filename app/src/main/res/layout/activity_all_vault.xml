@@ -108,7 +108,7 @@
             android:fontFamily="@font/trebuc"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:text="@string/goto_explorer_to_add_files_to_vault"
+            android:text="@string/goto_explorer_to_add_files_to_vault_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
