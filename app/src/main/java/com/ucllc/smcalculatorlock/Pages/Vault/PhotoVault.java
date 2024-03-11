@@ -29,6 +29,7 @@ import com.ucllc.smcalculatorlock.DataClasses.LockedFile;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Pages.Frags.FileVault;
 import com.ucllc.smcalculatorlock.R;
+import com.ucllc.smcalculatorlock.Sheets.FileSelection;
 import com.ucllc.smcalculatorlock.databinding.ActivityPhotoVaultBinding;
 
 import java.io.File;
@@ -51,11 +52,10 @@ public class PhotoVault extends AppCompatActivity {
         binding.back.setOnClickListener(v -> finish());
         dbHandler = new DBHandler(this);
 
-        binding.addPhotos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
+        binding.addPhotos.setOnClickListener(view -> {
+            FileSelection fileSelection = new FileSelection(new Global(this, this),
+                    FileSelection.MediaType.IMAGE, this::loadFiles);
+            fileSelection.show(getSupportFragmentManager(), fileSelection.getTag());
         });
 
         AdView adView = binding.vaultBannerAd;

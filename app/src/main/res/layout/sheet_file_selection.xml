@@ -20,6 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:background="@drawable/circular_hover"
             android:id="@+id/close"
             android:layout_width="55dp"
             android:layout_height="55dp"
@@ -57,6 +58,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:minHeight="300dp"
         android:visibility="gone"
         android:id="@+id/filesView"
         android:nestedScrollingEnabled="true"
@@ -64,6 +66,7 @@
         android:layout_height="match_parent"/>
 
     <LinearLayout
+        android:minHeight="300dp"
         android:id="@+id/loading"
         android:orientation="horizontal"
         android:gravity="center"
@@ -83,6 +86,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:minHeight="300dp"
         android:visibility="gone"
         android:id="@+id/empty"
         android:orientation="horizontal"

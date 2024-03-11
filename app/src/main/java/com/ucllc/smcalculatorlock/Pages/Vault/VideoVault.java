@@ -29,6 +29,7 @@ import com.ucllc.smcalculatorlock.DataClasses.LockedFile;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Pages.Frags.FileVault;
 import com.ucllc.smcalculatorlock.R;
+import com.ucllc.smcalculatorlock.Sheets.FileSelection;
 import com.ucllc.smcalculatorlock.databinding.ActivityPhotoVaultBinding;
 import com.ucllc.smcalculatorlock.databinding.ActivityVideoVaultBinding;
 
@@ -51,6 +52,12 @@ public class VideoVault extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black_button));
         binding.back.setOnClickListener(v -> finish());
         dbHandler = new DBHandler(this);
+
+        binding.addVideos.setOnClickListener(view -> {
+            FileSelection fileSelection = new FileSelection(new Global(this, this),
+                    FileSelection.MediaType.VIDEO, this::loadFiles);
+            fileSelection.show(getSupportFragmentManager(), fileSelection.getTag());
+        });
 
         AdView adView = binding.vaultBannerAd;
         adView.setAdListener(new AdListener() {

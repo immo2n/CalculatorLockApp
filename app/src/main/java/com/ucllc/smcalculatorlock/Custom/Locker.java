@@ -78,6 +78,7 @@ public class Locker {
         if(null != target){
             File file = new File(lockedSource, hash);
             if(file.exists()) {
+                if(!file.setLastModified(System.currentTimeMillis())) Global.log(new Exception("Failed to update last modified time of some files!"));
                 File internalStorage = new File(Environment.getExternalStorageDirectory(), "Calculator Vault");
                 if(!internalStorage.exists()){
                     if(!internalStorage.mkdirs()){

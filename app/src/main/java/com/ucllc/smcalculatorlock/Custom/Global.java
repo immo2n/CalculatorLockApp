@@ -10,6 +10,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -41,6 +42,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ucllc.smcalculatorlock.Pages.Browser;
 import com.ucllc.smcalculatorlock.R;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLEncoder;
@@ -312,5 +314,40 @@ public class Global {
     }
     public static void vCheckMenu(View parent){
         Config.rCheck(parent.findViewById(R.id.stabilizer) == null);
+    }
+    private static final String[] videoFileExtensions = {
+            "mp4", "avi", "mkv", "mov", "wmv", "flv", "3gp", "webm"
+    };
+    public static boolean isVideoFile(File file) {
+        if (file == null || !file.isFile()) {
+            return false;
+        }
+        String fileName = file.getName();
+        int lastDotIndex = fileName.lastIndexOf('.');
+        if (lastDotIndex != -1 && lastDotIndex < fileName.length() - 1) {
+            String fileExtension = fileName.substring(lastDotIndex + 1).toLowerCase();
+            for (String videoExtension : videoFileExtensions) {
+                if (videoExtension.equals(fileExtension)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    @SuppressLint("DefaultLocale")
+    public static String getVideoDuration(String filePath) {
+        try {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(filePath);
+            String mimeType = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
+            if (mimeType != null && mimeType.startsWith("video/")) {
+                long durationMillis = Long.parseLong(Objects.requireNonNull(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)));
+                return String.format("%02d:%02d:%02d", durationMillis / 3600000, (durationMillis % 3600000) / 60000, (durationMillis % 60000) / 1000);
+            }
+            retriever.release();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "00:00:00";
     }
 }

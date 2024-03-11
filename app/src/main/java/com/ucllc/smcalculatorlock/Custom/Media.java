@@ -42,7 +42,7 @@ public class Media {
                     projection,
                     null,
                     null,
-                    MediaStore.MediaColumns.DATE_MODIFIED + " DESC"
+                    MediaStore.MediaColumns.DATE_MODIFIED + " ASC"
             );
 
             if (cursor != null) {
@@ -79,7 +79,7 @@ public class Media {
                     projection,
                     null,
                     null,
-                    MediaStore.MediaColumns.DATE_MODIFIED + " DESC"
+                    MediaStore.MediaColumns.DATE_MODIFIED + " ASC"
             );
             if (cursor != null) {
                 int dataIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
