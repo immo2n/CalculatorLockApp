@@ -31,6 +31,5 @@ public class FileSelection extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
     }
     public void loadFiles(){
-
     }
 }
