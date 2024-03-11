@@ -38,10 +38,10 @@ public class VaultListAdapter extends RecyclerView.Adapter<VaultListAdapter.View
     private final FileVault.OnFileSelectedCallback fileSelectedCallback;
 
     public VaultListAdapter(List<LockedFile> lockedFileList, Activity activity, Context context, FileVault.OnFileSelectedCallback fileSelectedCallback) {
+        lockerDestination = new File(activity.getFilesDir(), "locked");
         this.lockedFileList = lockedFileList;
         this.activity = activity;
         this.context = context;
-        lockerDestination = new File(activity.getFilesDir(), "locked");
         this.fileSelectedCallback = fileSelectedCallback;
     }
 
@@ -54,28 +54,35 @@ public class VaultListAdapter extends RecyclerView.Adapter<VaultListAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //Reset
+        LockedFile item = lockedFileList.get(position);
+        File file = new File(lockerDestination, item.getHash());
+        Explorer.FileType fileType = Explorer.fileType(item.getFileName());
+
         holder.icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.file_unknown));
         holder.name.setText("");
         holder.info.setText("");
         holder.selectionSwitch.setOnCheckedChangeListener(null);
 
-        LockedFile item = lockedFileList.get(position);
-        File file = new File(lockerDestination, item.getHash());
-
-        holder.selectionSwitch.setChecked(FileVault.unlockMap.containsKey(item));
+        if(FileVault.unlockMapLink.size() > 0) holder.selectionSwitch.setChecked(FileVault.unlockMapLink.contains(item.getHash()));
         holder.selectionSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(FileVault.unlockMapLocked) return;
             if(isChecked){
                 FileVault.unlockMap.put(item, holder.selectionSwitch);
+                FileVault.unlockMapLink.add(item.getHash());
             } else {
                 FileVault.unlockMap.remove(item);
+                FileVault.unlockMapLink.remove(item.getHash());
             }
             fileSelectedCallback.onSelect(item, holder.selectionSwitch);
         });
 
+
+        holder.selectionSwitch.setEnabled(true);
+        if(FileVault.diableSelection){
+            holder.selectionSwitch.setEnabled(false);
+        }
+
         holder.name.setText(item.getFileName());
-        Explorer.FileType fileType = Explorer.fileType(item.getFileName());
         if(fileType == Explorer.FileType.IMAGE){
             Picasso.get()
                     .load(file)

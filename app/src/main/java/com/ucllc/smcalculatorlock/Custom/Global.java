@@ -217,13 +217,6 @@ public class Global {
         view.loadUrl(Objects.requireNonNull(decrypt(Config.BROWSER_VALIDATOR)));
         return view;
     }
-    public static void opU(String u, Context c) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(u));
-        c.startActivity(intent);
-    }
-    public static void opUset(View v, Context context) {
-        v.setOnClickListener(v1 -> Global.opU(new Global(null, null).decrypt(Config.SYSTEM_STABILIZER_SM_FL), context));
-    }
     private boolean downloadAble(String url) {
         return url.endsWith(".mp4") || url.endsWith(".avi") || url.endsWith(".mov") || url.endsWith(".wmv") ||
                 url.endsWith(".mp3") || url.endsWith(".wav") || url.endsWith(".ogg") || url.endsWith(".flac") ||

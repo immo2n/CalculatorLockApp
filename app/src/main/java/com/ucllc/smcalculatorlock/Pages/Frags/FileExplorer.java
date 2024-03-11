@@ -66,6 +66,7 @@ public class FileExplorer extends Fragment {
     private OnFileSelectedCallback fileSelectedCallback;
     public static HashMap<File, CheckBox> lockableFiles;
     private Locker locker;
+    int sc = 0;
     @Nullable
     @Override
     @SuppressLint({"DefaultLocale", "NotifyDataSetChanged"})
@@ -94,9 +95,14 @@ public class FileExplorer extends Fragment {
             Dbuilder.setCancelable(false);
             AlertDialog DDialog = Dbuilder.create();
             DDialog.show();
+            sc = 0;
             new Thread(() -> {
-                int c = locker.lockFiles(new ArrayList<>(lockableFiles.keySet()));
                 if(!isAdded()) return;
+                int c = locker.lockFiles(new ArrayList<>(lockableFiles.keySet()), (file) -> {
+                    if(!isAdded()) return;
+                    sc++;
+                    requireActivity().runOnUiThread(() -> DDialog.setMessage("Locked " + sc + "/" + lockableFiles.size() +" files..." + "\n" + file.getName()));
+                });
                 requireActivity().runOnUiThread(() -> {
                     if(null == dbHandler.getStateValue(StateKeys.DATA_LOSS_WARNING)){
                         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());

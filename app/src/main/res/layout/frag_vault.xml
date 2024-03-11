@@ -1,111 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:background="@color/midnight_black">
 
     <LinearLayout
-        android:id="@+id/loading"
+        android:id="@+id/allPage"
+        android:elevation="2dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/rounded_back"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         android:orientation="horizontal"
-        android:gravity="center"
+        android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ProgressBar
-            android:layout_marginEnd="5dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
+        android:layout_height="80dp">
+        <ImageView
+            android:padding="10dp"
+            android:src="@drawable/folder"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/all_files" />
         <TextView
-            android:textSize="15sp"
+            android:textStyle="bold"
             android:fontFamily="@font/trebuc"
-            android:textColor="@color/off_white"
-            android:text="@string/loading_vault"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/all_files"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:visibility="gone"
-        android:id="@+id/vaultView"
-        android:gravity="center"
-        android:textColor="@color/white"
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/vaultBannerAd"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <RelativeLayout
-        android:visibility="gone"
-        android:id="@+id/emptyVault"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.airbnb.lottie.LottieAnimationView
-            android:scaleX="2"
-            android:scaleY="2"
-            android:id="@+id/lottieAnimationView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="anim_vault.json"/>
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/lottieAnimationView"
-            android:id="@+id/title"
-            android:textAlignment="center"
-            android:fontFamily="@font/trebuc"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:text="@string/file_vault"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_marginTop="7dp"
-            android:layout_below="@id/title"
-            android:textAlignment="center"
-            android:fontFamily="@font/trebuc"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:text="@string/goto_explorer_to_add_files_to_vault"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-3940256099942544/9214589741"/>
 
     <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/unlockButton"
+        android:id="@+id/photoPage"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:elevation="2dp"
         android:background="@drawable/rounded_back"
-        android:layout_marginBottom="40dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         android:orientation="horizontal"
-        android:padding="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
         <ImageView
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/circular_hover"
-            android:id="@+id/cancelSelection"
-            android:src="@drawable/close"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:padding="5dp"
-            android:contentDescription="@string/lock_icon" />
-
-        <TextView
             android:padding="10dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:id="@+id/lockerText"
-            android:fontFamily="@font/trebuc"
-            android:layout_width="wrap_content"
+            android:src="@drawable/file_image"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/unlock_files"
+            android:contentDescription="@string/photos" />
+        <TextView
+            android:textStyle="bold"
+            android:fontFamily="@font/trebuc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/photos"
             android:textColor="@color/white"
-            android:textSize="17sp" />
+            android:textSize="20sp"/>
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/videoPage"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:elevation="2dp"
+        android:background="@drawable/rounded_back"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+        <ImageView
+            android:padding="10dp"
+            android:src="@drawable/file_video"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/videos" />
+        <TextView
+            android:textStyle="bold"
+            android:fontFamily="@font/trebuc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/videos"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+    </LinearLayout>
+</LinearLayout>

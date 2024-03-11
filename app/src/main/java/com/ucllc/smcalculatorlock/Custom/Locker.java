@@ -19,7 +19,10 @@ public class Locker {
         this.global = global;
         dbHandler = global.getDBHandler();
     }
-    public int lockFiles(List<File> files){
+    public interface onLock {
+        void onLocked(File file);
+    }
+    public int lockFiles(List<File> files, onLock onLock){
         int c = 0;
         Activity activity = global.getActivity();
         if(null == activity){
@@ -46,6 +49,9 @@ public class Locker {
                     if(moveFile(file, new File(destination, hash))){
                         dbHandler.addLockedFile(lockedFile);
                         c++;
+                        if(null != onLock){
+                            onLock.onLocked(file);
+                        }
                     }
                     else {
                         Global.logError(new Exception("Failed to lock file: " + file.getAbsolutePath() + " to " + hash));

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/midnight_black"
+    tools:context=".Pages.Vault.VideoVault">
+
+    <LinearLayout
+        android:background="@color/midnight_black_button"
+        android:elevation="5dp"
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/circular_hover"
+            android:clickable="true"
+            android:contentDescription="@string/back"
+            android:focusable="true"
+            android:padding="10dp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:layout_marginEnd="10dp"
+            android:id="@+id/fileName"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:ellipsize="middle"
+            android:fontFamily="@font/trebuc"
+            android:gravity="center|start"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:text="@string/videos"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:fontFamily="@font/trebuc"
+            android:textColor="@color/white"
+            android:id="@+id/selectAll"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_marginEnd="10dp"
+            android:text="@string/select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:textAllCaps="false"
+            android:fontFamily="@font/trebuc"
+            android:textColor="@color/white"
+            android:id="@+id/addPhotos"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_marginEnd="10dp"
+            android:text="@string/add"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loading"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_marginEnd="5dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+        <TextView
+            android:textSize="15sp"
+            android:fontFamily="@font/trebuc"
+            android:textColor="@color/off_white"
+            android:text="@string/loading_vault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/emptyVault"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.airbnb.lottie.LottieAnimationView
+            android:scaleX="2"
+            android:scaleY="2"
+            android:id="@+id/lottieAnimationView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="anim_vault.json"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/lottieAnimationView"
+            android:id="@+id/title"
+            android:textAlignment="center"
+            android:fontFamily="@font/trebuc"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:text="@string/file_vault"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginTop="7dp"
+            android:layout_below="@id/title"
+            android:textAlignment="center"
+            android:fontFamily="@font/trebuc"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:text="@string/goto_explorer_to_add_files_to_vault"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="55dp"
+        android:id="@+id/vaultView"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:elevation="5dp"
+        android:visibility="gone"
+        android:id="@+id/unlockButton"
+        android:background="@drawable/rounded_back"
+        android:layout_marginBottom="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/circular_hover"
+            android:id="@+id/cancelSelection"
+            android:src="@drawable/close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="5dp"
+            android:contentDescription="@string/lock_icon" />
+
+        <TextView
+            android:padding="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:id="@+id/lockerText"
+            android:fontFamily="@font/trebuc"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/unlock_files"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

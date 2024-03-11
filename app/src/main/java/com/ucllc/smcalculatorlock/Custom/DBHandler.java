@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.NonNull;
 
 import com.ucllc.smcalculatorlock.DataClasses.LockedFile;
+import com.ucllc.smcalculatorlock.Pages.Vault.PhotoVault;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,7 +94,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    public List<LockedFile> getLockedFiles(){
+    public List<LockedFile> getLockedFiles(Explorer.FileType fileType){
         List<LockedFile> list = new ArrayList<>();
         try {
             SQLiteDatabase db = this.getReadableDatabase();
@@ -110,6 +111,13 @@ public class DBHandler extends SQLiteOpenHelper {
                 } while (cursor.moveToNext());
             }
             cursor.close();
+            if(fileType != Explorer.FileType.ALL){
+                for(int i = list.size() - 1; i >= 0; i--){
+                    if(Explorer.fileType(list.get(i).getFileName()) != fileType){
+                        list.remove(i);
+                    }
+                }
+            }
             Collections.reverse(list);
             return list;
         }
