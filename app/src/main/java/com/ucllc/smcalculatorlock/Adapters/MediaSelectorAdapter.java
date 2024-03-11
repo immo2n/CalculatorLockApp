@@ -56,14 +56,12 @@ public class MediaSelectorAdapter extends RecyclerView.Adapter<MediaSelectorAdap
             if(FileSelection.selectedFilePaths.contains(file.getAbsolutePath())){
                 //Remove
                 FileSelection.selectedFilePaths.remove(file.getAbsolutePath());
-                holder.relativeLayout.setBackground(null);
                 holder.selectedSymbol.setVisibility(View.GONE);
                 onFileSelectedListener.onFileSelection(false);
             }
             else {
                 //Add
                 FileSelection.selectedFilePaths.add(file.getAbsolutePath());
-                holder.relativeLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.file_selected));
                 holder.selectedSymbol.setVisibility(View.VISIBLE);
                 onFileSelectedListener.onFileSelection(true);
             }
