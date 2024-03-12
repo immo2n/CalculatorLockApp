@@ -84,8 +84,6 @@ public class Calculator extends AppCompatActivity {
         expression = "";
         history = new ArrayList<>();
 
-        Toast.makeText(this, "THIS IS A DEMO VERSION BY UNICORE LLC", Toast.LENGTH_LONG).show();
-
         //Ready the PIN
         String rawPin = dbHandler.getStateValue(StateKeys.PIN);
         homePin = (null != rawPin)? global.decrypt(rawPin):null;

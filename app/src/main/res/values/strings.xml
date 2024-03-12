@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">DEMO: SM Calculator Lock</string>
+    <string name="app_name">SM Calculator Lock</string>
     <string name="ac">AC</string>
     <string name="fa_backspace"></string>
     <string name="percent">%</string>
