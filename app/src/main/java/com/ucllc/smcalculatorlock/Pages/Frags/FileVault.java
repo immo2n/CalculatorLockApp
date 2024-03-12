@@ -62,6 +62,6 @@ public class FileVault extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        adView.destroy();
+        if(null != adView) adView.destroy();
     }
 }
