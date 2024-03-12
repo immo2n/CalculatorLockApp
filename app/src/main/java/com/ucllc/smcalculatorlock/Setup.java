@@ -21,6 +21,7 @@ import com.ucllc.smcalculatorlock.Custom.Global;
 import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Pages.Calculator;
 import com.ucllc.smcalculatorlock.Pages.PinSetup;
+import com.ucllc.smcalculatorlock.UniCore.LisenceCheck;
 import com.ucllc.smcalculatorlock.databinding.ActivitySetupBinding;
 
 public class Setup extends AppCompatActivity {
@@ -103,6 +104,8 @@ public class Setup extends AppCompatActivity {
             }
             permissionCheck = true;
         });
+        //Lisence check
+        new LisenceCheck(this, this);
     }
     private void completeSetup(){
         dbHandler.setAppState(StateKeys.SETUP, StateKeys.VALUE_TRUE);

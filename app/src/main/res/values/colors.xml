@@ -29,6 +29,7 @@
     <color name="midnight_black_button">#1F2F40</color>
     <color name="off_white">#80FFFFFF</color>
     <color name="black_overlay">#66000000</color>
+    <color name="orange_dark">#EC8E05</color>
 
     //Brand colors
     <color name="brand_primary">#8BA5BF</color>

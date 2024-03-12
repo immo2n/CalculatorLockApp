@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FileVault extends Fragment {
-    public static boolean diableSelection = false;
+    public static boolean disableSelection = false;
     public interface OnFileSelectedCallback {
         void onSelect(LockedFile lockedFile, CheckBox checkBox);
     }
@@ -50,9 +50,13 @@ public class FileVault extends Fragment {
         binding.photoPage.setOnClickListener(view -> startActivity(new Intent(requireContext(), PhotoVault.class)));
         binding.videoPage.setOnClickListener(view -> startActivity(new Intent(requireContext(), VideoVault.class)));
         binding.allPage.setOnClickListener(view -> startActivity(new Intent(requireContext(), AllVault.class)));
+
+        /*
         adView = binding.vaultBannerAd;
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+         */
+
         return binding.getRoot();
     }
     @Override

@@ -14,4 +14,5 @@ public class StateKeys {
     public static final String SORT_BY_SIZE = "sort_by_size";
     public static final String DATA_LOSS_WARNING = "data_loss_warning";
     public static final String TIP_UNLOCK = "unlock_tip";
+    public static final String LICENSE_CHANCES_TAKEN = "lisence_chances_taken";
 }

@@ -123,18 +123,20 @@
             android:layout_width="100dp"
             android:layout_height="match_parent">
 
-            <TextView
+            <ImageView
+                android:padding="7dp"
+                android:src="@drawable/app_lock"
                 android:id="@+id/tabApps"
                 android:focusable="true"
                 android:clickable="true"
                 android:textSize="25sp"
                 android:gravity="center"
-                android:textColor="@color/off_white"
                 android:text="@string/fa_apps"
                 android:fontFamily="@font/font_awesome_regular"
                 android:layout_width="100dp"
                 android:layout_weight="1"
-                android:layout_height="0dp"/>
+                android:layout_height="0dp"
+                android:contentDescription="@string/app_lock" />
 
             <TextView
                 android:textSize="12sp"
@@ -142,7 +144,7 @@
                 android:fontFamily="@font/trebuc"
                 android:gravity="center"
                 android:textColor="@color/off_white"
-                android:text="@string/apps"
+                android:text="@string/app_lock"
                 android:id="@+id/appsText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

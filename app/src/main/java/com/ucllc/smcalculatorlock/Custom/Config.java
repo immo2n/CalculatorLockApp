@@ -3,6 +3,7 @@ package com.ucllc.smcalculatorlock.Custom;
 import android.util.Pair;
 
 public class Config {
+    public static final String LISENCE_KEY = "p$4yXiD(UFga&;|j,F&T;^Ig6#z[qmNgCR4:Q,{D}?bf}_/r$'";
     /*!!!!*******************************************************************!!!!*/
     /*******NEVER CHANGE THESE, IF CHANGED OLD DATA RECOVERY WILL NOT WORK - APP WILL CRASH*******/
     /*Here 1st string is the encryption key and 2nd string is the version of the encryption key.
@@ -14,7 +15,8 @@ public class Config {
     /*!!!!*******************************************************************!!!!*/
     protected static final String ENCRYPTION_KEY = ENCRYPTION_KEY_PAIR.first;
     public static final String ENCRYPTION_VERSION = ENCRYPTION_KEY_PAIR.second;
-    public static final String AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"; //ALSO CHANGE IN MANIFEST
+    public static final String AD_UNIT_ID_INTERSTITIAL = "ca-app-pub-3940256099942544/1033173712";
+    public static final String AD_UNIT_ID_OPEN_APP = "ca-app-pub-3940256099942544/9257395921";
     public static void rCheck(boolean t){
         if(t) throw new RuntimeException();
     }

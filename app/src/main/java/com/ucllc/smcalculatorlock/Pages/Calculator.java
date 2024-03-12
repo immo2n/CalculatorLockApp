@@ -11,6 +11,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ucllc.smcalculatorlock.CalculatorPages.CalculatorHistory;
 import com.ucllc.smcalculatorlock.Custom.DBHandler;
@@ -23,6 +26,7 @@ import com.ucllc.smcalculatorlock.Interfaces.CalculatorEvalCallback;
 import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.Setup;
 import com.ucllc.smcalculatorlock.Sheets.PrivacyNotice;
+import com.ucllc.smcalculatorlock.UniCore.LisenceCheck;
 import com.ucllc.smcalculatorlock.databinding.ActivityCalculatorBinding;
 
 import java.util.ArrayList;
@@ -36,12 +40,15 @@ public class Calculator extends AppCompatActivity {
     private DBHandler dbHandler;
     private String homePin;
     private int invalidPinCount = 0;
+
     @SuppressLint({"SetJavaScriptEnabled", "InflateParams"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbHandler = new DBHandler(this);
-        new AdLoader(Calculator.this, Calculator.this, AdLoader::loadInterstitialAd);
+
+        //Open app ad
+        new AdLoader(this, this, AdLoader::loadOpenAppAd);
 
         Intent serviceIntent = new Intent(this, AppLockForegroundService.class);
         startService(serviceIntent);
@@ -64,6 +71,10 @@ public class Calculator extends AppCompatActivity {
             return;
         }
         /*SETUP CHECK ENDS*/
+
+        //Lisence check
+        new LisenceCheck(this, this);
+
         binding = ActivityCalculatorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Global global = new Global(this, this);

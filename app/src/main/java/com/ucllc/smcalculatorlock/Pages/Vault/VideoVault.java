@@ -30,7 +30,6 @@ import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Pages.Frags.FileVault;
 import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.Sheets.FileSelection;
-import com.ucllc.smcalculatorlock.databinding.ActivityPhotoVaultBinding;
 import com.ucllc.smcalculatorlock.databinding.ActivityVideoVaultBinding;
 
 import java.io.File;
@@ -59,6 +58,7 @@ public class VideoVault extends AppCompatActivity {
             fileSelection.show(getSupportFragmentManager(), fileSelection.getTag());
         });
 
+        /*
         AdView adView = binding.vaultBannerAd;
         adView.setAdListener(new AdListener() {
             @Override
@@ -73,10 +73,11 @@ public class VideoVault extends AppCompatActivity {
         });
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+         */
 
-        FileVault.diableSelection = false;
+        FileVault.disableSelection = false;
         binding.selectAll.setOnClickListener(v -> {
-            FileVault.diableSelection = true;
+            FileVault.disableSelection = true;
             FileVault.unlockMapLocked = true;
             FileVault.unlockMap.clear();
             FileVault.unlockMapLink.clear();
@@ -103,7 +104,7 @@ public class VideoVault extends AppCompatActivity {
         loadFiles();
 
         binding.cancelSelection.setOnClickListener(v -> {
-            FileVault.diableSelection = false;
+            FileVault.disableSelection = false;
             FileVault.unlockMapLocked = true;
             for (LockedFile lockedFile : FileVault.unlockMap.keySet()) {
                 CheckBox checkBox = FileVault.unlockMap.get(lockedFile);

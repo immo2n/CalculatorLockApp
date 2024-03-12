@@ -30,7 +30,6 @@ import com.ucllc.smcalculatorlock.DataClasses.StateKeys;
 import com.ucllc.smcalculatorlock.Pages.Frags.FileVault;
 import com.ucllc.smcalculatorlock.R;
 import com.ucllc.smcalculatorlock.databinding.ActivityAllVaultBinding;
-import com.ucllc.smcalculatorlock.databinding.ActivityPhotoVaultBinding;
 
 import java.io.File;
 import java.util.HashMap;
@@ -52,10 +51,10 @@ public class AllVault extends AppCompatActivity {
         binding.back.setOnClickListener(v -> finish());
         dbHandler = new DBHandler(this);
 
-        FileVault.diableSelection = false;
+        FileVault.disableSelection = false;
 
         binding.selectAll.setOnClickListener(v -> {
-            FileVault.diableSelection = true;
+            FileVault.disableSelection = true;
             FileVault.unlockMapLocked = true;
             FileVault.unlockMap.clear();
             FileVault.unlockMapLink.clear();
@@ -68,6 +67,7 @@ public class AllVault extends AppCompatActivity {
             lockerUIChange();
         });
 
+        /*
         AdView adView = binding.vaultBannerAd;
         adView.setAdListener(new AdListener() {
             @Override
@@ -83,6 +83,7 @@ public class AllVault extends AppCompatActivity {
 
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+         */
 
         locker = new Locker(new Global(this, this));
         lockerDestination = new File(getFilesDir(), "locked");
@@ -98,7 +99,7 @@ public class AllVault extends AppCompatActivity {
         loadFiles();
 
         binding.cancelSelection.setOnClickListener(v -> {
-            FileVault.diableSelection = false;
+            FileVault.disableSelection = false;
             FileVault.unlockMapLocked = true;
             for (LockedFile lockedFile : FileVault.unlockMap.keySet()) {
                 CheckBox checkBox = FileVault.unlockMap.get(lockedFile);

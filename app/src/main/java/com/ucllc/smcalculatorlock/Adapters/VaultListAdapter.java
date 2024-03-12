@@ -3,7 +3,6 @@ package com.ucllc.smcalculatorlock.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +13,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
 import com.ucllc.smcalculatorlock.Custom.Explorer;
-import com.ucllc.smcalculatorlock.Custom.Global;
 import com.ucllc.smcalculatorlock.DataClasses.LockedFile;
 import com.ucllc.smcalculatorlock.Pages.Frags.FileExplorer;
 import com.ucllc.smcalculatorlock.Pages.Frags.FileVault;
@@ -78,7 +75,7 @@ public class VaultListAdapter extends RecyclerView.Adapter<VaultListAdapter.View
 
 
         holder.selectionSwitch.setEnabled(true);
-        if(FileVault.diableSelection){
+        if(FileVault.disableSelection){
             holder.selectionSwitch.setEnabled(false);
         }
 

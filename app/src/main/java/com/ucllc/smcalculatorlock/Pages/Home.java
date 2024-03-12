@@ -60,12 +60,11 @@ public class Home extends AppCompatActivity {
         global = new Global(this, this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.midnight_black_button));
 
-        adLoader = new AdLoader(this, this, (adLoader) -> {
-            adLoader.loadInterstitialAd();
-            isAdLoaderReady = true;
-        });
-
+        adLoader = new AdLoader(this, this, (adLoader) -> isAdLoaderReady = true);
         loadAdOnHome = this::tryLoadingADS;
+        
+        //Open app ad
+        new AdLoader(this, this, AdLoader::loadOpenAppAd);
 
         showPrivacy = () -> {
             PrivacyNotice notice = new PrivacyNotice();
@@ -102,9 +101,6 @@ public class Home extends AppCompatActivity {
                 if(null != global.getContext()) {
                     binding.tabVault.setTextColor(ContextCompat.getColor(global.getContext(),
                             (0 == position) ? R.color.white : R.color.off_white
-                    ));
-                    binding.tabApps.setTextColor(ContextCompat.getColor(global.getContext(),
-                            (1 == position) ? R.color.white : R.color.off_white
                     ));
                     binding.tabFiles.setTextColor(ContextCompat.getColor(global.getContext(),
                             (2 == position) ? R.color.white : R.color.off_white

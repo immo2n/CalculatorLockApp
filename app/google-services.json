@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "162475025122",
+    "project_id": "sm-calculator-lock",
+    "storage_bucket": "sm-calculator-lock.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162475025122:android:600594314ab6c962cc74bb",
+        "android_client_info": {
+          "package_name": "com.ucllc.smcalculatorlock"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuEEyrYcp-xPFKixsIV66SWEzhqzVfr_k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

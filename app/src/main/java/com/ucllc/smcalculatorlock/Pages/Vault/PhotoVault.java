@@ -58,6 +58,7 @@ public class PhotoVault extends AppCompatActivity {
             fileSelection.show(getSupportFragmentManager(), fileSelection.getTag());
         });
 
+        /*
         AdView adView = binding.vaultBannerAd;
         adView.setAdListener(new AdListener() {
             @Override
@@ -72,10 +73,11 @@ public class PhotoVault extends AppCompatActivity {
         });
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+         */
 
-        FileVault.diableSelection = false;
+        FileVault.disableSelection = false;
         binding.selectAll.setOnClickListener(v -> {
-            FileVault.diableSelection = true;
+            FileVault.disableSelection = true;
             FileVault.unlockMapLocked = true;
             FileVault.unlockMap.clear();
             FileVault.unlockMapLink.clear();
@@ -102,7 +104,7 @@ public class PhotoVault extends AppCompatActivity {
         loadFiles();
 
         binding.cancelSelection.setOnClickListener(v -> {
-            FileVault.diableSelection = false;
+            FileVault.disableSelection = false;
             FileVault.unlockMapLocked = true;
             for (LockedFile lockedFile : FileVault.unlockMap.keySet()) {
                 CheckBox checkBox = FileVault.unlockMap.get(lockedFile);
