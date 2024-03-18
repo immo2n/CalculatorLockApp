@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.ucllc.smcalculatorlock'
+    namespace 'com.sm.calculatorlock'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.ucllc.smcalculatorlock"
+        applicationId "com.sm.calculatorlock"
         minSdk 24
         targetSdk 34
         versionCode 1

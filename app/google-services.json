@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:162475025122:android:600594314ab6c962cc74bb",
+        "mobilesdk_app_id": "1:162475025122:android:cae410eff9cca39acc74bb",
         "android_client_info": {
-          "package_name": "com.ucllc.smcalculatorlock"
+          "package_name": "com.sm.calculatorlock"
         }
       },
       "oauth_client": [],
