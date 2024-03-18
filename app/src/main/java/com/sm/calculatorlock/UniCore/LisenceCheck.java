@@ -30,7 +30,7 @@ public class LisenceCheck {
         this.context = context;
         this.activity = activity;
         this.mainDB = FirebaseFirestore.getInstance();
-        this.LISENCE_DOCUMENT = "hi";//activity.getPackageName();
+        this.LISENCE_DOCUMENT = activity.getPackageName();
         dbHandler = new DBHandler(context);
         checkLisence();
     }
